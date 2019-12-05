@@ -20,3 +20,5 @@ lab <- c("timestamp", "plec", "wiek", "zly_humor", "swietnie",
          "znaczenie_kontaktow")
 colnames(dane) <- lab
 dane$wiek[53] <- 17
+print("Sprawdzam czy działa")
+
