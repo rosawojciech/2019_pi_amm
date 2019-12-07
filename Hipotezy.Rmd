@@ -1,5 +1,5 @@
 ---
-title: "Unititled"
+title: "Raport"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -21,11 +21,6 @@ library(plyr)
 library(ggcorrplot)
 ```
 
-## Hipotezy statystyczne
-
-$H_0:$ nie istnieje zależność pomiędzy zmiennymi.
-
-$H_1:$ istnieje zależność pomiędzy zmiennymi.
 
 ```{r}
 {dane <- read.csv(file = "Ankieta.csv",
@@ -145,6 +140,11 @@ colnames(dane) <- lab
 
 ```
 
+## Hipotezy statystyczne
+
+$H_0:$ nie istnieje zależność pomiędzy zmiennymi.
+
+$H_1:$ istnieje zależność pomiędzy zmiennymi.
 
 ```{r}
 r1 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu),
@@ -153,7 +153,7 @@ r2 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu)
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendalla` wynosi `r r2`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc istnieje zależność pomiędzy poczuciem upokorzenia, a jakością snu.
+P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendalla` wynosi `r r2`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia, a jakością snu.
 
 ## Wykresy boxplot
 
@@ -166,9 +166,13 @@ par(mfrow=c(1,1))
 
 ##Wykresy barplot
 ```{r}
-tab <- table(dane$upokorzenie, dane$jakosc_snu)
-barplot(tab)
+tab <- table(dane$upokorzenie, dane$jakosc_snu) 
+tab #Tabela kontyngencji
+#najciemniejszy kolor - nigdy nie odczuwa upokorzenia
+#najjaśniejszy kolor - zawsze odczuwa upokorzenie
+barplot(tab, xlab="Jakość snu", ylab="Rozkład poczucia upokorzenia", sub="Najciemniejszy kolor - nigdy nie odczuwa upokorzenia")
 ttab <- prop.table(tab, margin = 2)*100
-barplot(ttab)
+ttab # w procentach
+barplot(ttab, xlab="Jakość snu", ylab="Procentowy rozkład poczucia upokorzenia", sub="Najciemniejszy kolor - nigdy nie odczuwa upokorzenia")
 ```
 
