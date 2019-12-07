@@ -146,6 +146,7 @@ $H_0:$ nie istnieje zależność pomiędzy zmiennymi.
 
 $H_1:$ istnieje zależność pomiędzy zmiennymi.
 
+## Badamy zależność pomiędzy poczuciem upokorzenia, a jakością snu
 ```{r}
 r1 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu),
          method = "spearman")$p.value
@@ -175,4 +176,36 @@ ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab, xlab="Jakość snu", ylab="Procentowy rozkład poczucia upokorzenia", sub="Najciemniejszy kolor - nigdy nie odczuwa upokorzenia")
 ```
+
+
+##Badamy zależność pomiędzy dietą a poczuciem radości
+```{r}
+cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+         method = "spearman")$p.value
+cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+         method = "kendall")$p.value
+```
+
+Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą, a poczuciem radości.
+
+## Wykresy boxplot
+```{r}
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
+boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+##Wykresy barplot
+```{r}
+tab <- table(dane$dieta, dane$radosc) 
+tab #Tabela kontyngencji
+#najciemniejszy kolor - dieta fast food
+#najjaśniejszy kolor - zbilansowana dieta
+barplot(tab, xlab="Poczucie radości", ylab="Rozkład rodzaju diety", sub="Najciemniejszy kolor - dieta fast food")
+ttab <- prop.table(tab, margin = 2)*100
+ttab # w procentach
+barplot(ttab, xlab="Poczucie radości", ylab="Procentowy rozkład rodzaju diety", sub="Najciemniejszy kolor - dieta fast food")
+```
+
 
