@@ -163,3 +163,12 @@ boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "pozi
 boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
+
+##Wykresy barplot
+```{r}
+tab <- table(dane$upokorzenie, dane$jakosc_snu)
+barplot(tab)
+ttab <- prop.table(tab, margin = 2)*100
+barplot(ttab)
+```
+
