@@ -148,7 +148,10 @@ $H_1:$ istnieje zależność pomiędzy zmiennymi.
 
 Hipotezy badane są na poziomie istotności $\alpha = 0.05$.
 
-### Zależność pomiędzy poczuciem upokorzenia a jakością snu
+### Hipoteza I
+
+Badanie, czy istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
+
 ```{r}
 r1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
          method = "spearman")$p.value
@@ -156,7 +159,7 @@ r2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie)
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu.
 
 ### Wykresy boxplot
 ```{r}
@@ -188,7 +191,10 @@ barplot(ttab,
 ```
 
 
-### Zależność pomiędzy dietą a poczuciem radości
+### Hipoteza II
+
+Badanie, czy istnieje zależność pomiędzy dietą a poczuciem radości.
+
 ```{r}
 r3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "spearman")$p.value
@@ -196,7 +202,7 @@ r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą a poczuciem radości.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
 
 ### Wykresy boxplot
 
@@ -230,7 +236,9 @@ barplot(ttab,
         names.arg = c("fast food", "żywność przetw.", "mięso","wegetariańska", "zbilans."))
 ```
 
-### Zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju
+### Hipoteza III
+
+Badanie, czy istnieje zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju.
 
 ```{r}
 r5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
@@ -266,7 +274,20 @@ barplot(ttab,
         names.arg = c("0", "1", "2-3","4-5", "więcej niż 5"))
 ```
 
-### Zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń
+```{r}
+wsp_kor5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "spearman")$estimate
+wsp_kor6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor5` oraz `r wsp_kor6`. Interpretując te współczynniki oraz dane z wykresów, można stwierdzić, że wraz ze wzrostem liczby osób, z którymi utrzymuje się regularny kontakt, spada częstość odczuwania niepokoju.
+
+### Hipoteza IV
+
+Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń.
 
 ```{r}
 r7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
@@ -302,7 +323,20 @@ barplot(ttab,
         names.arg = c("mniej niż 1", "1-2", "2-3","3-4", "więcej niż 4"))
 ```
 
-### Zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością
+```{r}
+wsp_kor7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "spearman")$estimate
+wsp_kor8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor7` oraz `r wsp_kor8`. Wniosek: wraz ze wzrostem liczby godzin, spędzonych na korzystaniu dla rozrywki z urządzeń elektronicznych, wzrasta znacznie poczucie uzależnienia od tych urządzeń.
+
+### Hipoteza V
+
+Badanie, czy istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
 
 ```{r}
 r9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
@@ -330,13 +364,26 @@ ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Czy masz wyznaczone pory snu?",
-        ylab="Rozkład jakości snu",
+        ylab="Rozkład procentowy jakości snu",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
         names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"),
         legend.text = c("bardzo zła", "kiepska", "przeciętna", "dobra", "b. dobra"))
 ```
 
-### Zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania
+```{r}
+wsp_kor9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "spearman")$estimate
+wsp_kor10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` są dość duże i wynoszą odpowiednio `r wsp_kor9` oraz `r wsp_kor10`. Im bardziej regularne są pory snu, tym lepsza jest jego jakość.
+
+### Hipoteza VI
+
+Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
 
 ```{r}
 r11 <- cor.test(x = as.numeric(dane$godziny_sportu),
@@ -366,9 +413,67 @@ ttab # w procentach
 barplot(ttab,
         main = "Wykres zależności",
         xlab="Liczba godzin w tygodniu przeznaczonych na sport",
-        ylab="Rozkład poczucia załamania",
+        ylab="Rozkład procentowy poczucia załamania",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
         names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"),
-        )
+        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
 ```
 
+```{r}
+wsp_kor11 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "spearman")$estimate
+wsp_kor12 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor11` oraz `r wsp_kor12`. Im więcej godzin poświęca się tygodniowo na sport, tym rzadziej odczuwa się załamanie.
+
+### Hipoteza VII
+
+Badanie, czy istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+
+```{r}
+r13 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "spearman")$p.value
+r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r13)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r14)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+
+### Wykresy słupkowe
+
+```{r}
+tab <- table(dane$dobry_humor, dane$jakosc_posilkow) 
+tab #Tabela kontyngencji
+barplot(tab,
+        main="Jak dużą uwagę przykładasz do jakości swoich posiłków?",
+        ylab="Rozkład aktualnego humoru",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred"),
+        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"),
+        legend.text = c("zły", "kiepski", "średni", "dobry", "b. dobry"))
+ttab <- prop.table(tab, margin = 2)*100
+ttab # w procentach
+barplot(ttab,
+        main = "Jak dużą uwagę przykładasz do jakości swoich posiłków?",
+        ylab="Rozkład procentowy aktualnego humoru",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred"),
+        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"),
+        legend.text = c("zły", "kiepski", "średni", "dobry", "b. dobry"))
+#nie wiem czy ten opis faktycznie jest poprawny
+```
+
+```{r}
+wsp_kor13 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "spearman")$estimate
+wsp_kor14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "kendall")$estimate
+```
+
+Zarówno współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszące odpowiednio `r wsp_kor13` oraz `r wsp_kor14`, jak i wykresy słupkowe jasno wskazują na istotną zależność pomiędzy badanymi zmiennymi. Im większe znaczenie ma jakość spożywanych posiłków, tym lepszy humor się odczuwa.
