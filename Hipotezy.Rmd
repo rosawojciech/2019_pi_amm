@@ -14,10 +14,10 @@ knitr::opts_chunk$set(echo = F,
 ```{r}
 library(alr3)
 library(kableExtra)
+library(plyr)
 library(tidyverse)
 library(lmtest)
 library(ggplot2)
-library(plyr)
 library(ggcorrplot)
 ```
 
@@ -180,8 +180,13 @@ barplot(tab,
         xlab="Jakość snu",
         ylab="Rozkład poczucia upokorzenia",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
-        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"),
-        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+       cex=0.9)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
