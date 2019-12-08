@@ -188,6 +188,7 @@ barplot(ttab,
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
         names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"),
         legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+#legend(x=10, y=90, title = "Jak często odczuwasz upokorzenie?", legend = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"), fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"))
 ```
 
 
