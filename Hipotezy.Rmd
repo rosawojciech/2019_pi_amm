@@ -146,6 +146,8 @@ $H_0:$ nie istnieje zależność pomiędzy zmiennymi.
 
 $H_1:$ istnieje zależność pomiędzy zmiennymi.
 
+Hipotezy badane są na poziomie istotności $\alpha = 0.05$.
+
 ### Zależność pomiędzy poczuciem upokorzenia a jakością snu
 ```{r}
 r1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
@@ -154,7 +156,7 @@ r2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie)
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendalla` wynosi `r r2`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
 
 ### Wykresy boxplot
 ```{r}
@@ -165,7 +167,7 @@ P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendal
 #par(mfrow=c(1,1))
 ```
 
-### Wykresy barplot
+### Wykresy słupkowe
 ```{r}
 tab <- table(dane$upokorzenie, dane$jakosc_snu) 
 tab #Tabela kontyngencji
@@ -194,9 +196,10 @@ r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendalla` wynosi `r r4`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą a poczuciem radości.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą a poczuciem radości.
 
 ### Wykresy boxplot
+
 ```{r}
 #par(mfrow=c(1,2))
 #boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
@@ -204,7 +207,8 @@ P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendal
 #par(mfrow=c(1,1))
 ```
 
-### Wykresy barplot
+### Wykresy słupkowe
+
 ```{r}
 tab <- table(dane$radosc, dane$dieta) 
 tab #Tabela kontyngencji
@@ -237,7 +241,9 @@ r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r5`, natomiast dla testu `tau-Kendalla` wynosi `r r6`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r5)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r6)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+
+### Wykresy słupkowe
 
 ```{r}
 tab <- table(dane$niepokoj, dane$liczba_osob_kontakty) 
@@ -271,7 +277,9 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r7`, natomiast dla testu `tau-Kendalla` wynosi `r r8`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r7)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r8)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+
+### Wykresy słupkowe
 
 ```{r}
 tab <- table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia) 
@@ -293,4 +301,39 @@ barplot(ttab,
         legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("mniej niż 1", "1-2", "2-3","3-4", "więcej niż 4"))
 ```
+
+### Zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością
+
+```{r}
+r9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "spearman")$p.value
+r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r9)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r10)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+
+### Wykresy słupkowe
+
+```{r}
+tab <- table(dane$jakosc_snu, dane$wyzn_pory_snu) 
+tab #Tabela kontyngencji
+barplot(tab,
+        main="Czy masz wyznaczone pory snu?",
+        ylab="Rozkład jakości snu",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"),
+        legend.text = c("bardzo zła", "kiepska", "przeciętna", "dobra", "b. dobra"))
+ttab <- prop.table(tab, margin = 2)*100
+ttab # w procentach
+barplot(ttab,
+        main = "Czy masz wyznaczone pory snu?",
+        ylab="Rozkład jakości snu",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"),
+        legend.text = c("bardzo zła", "kiepska", "przeciętna", "dobra", "b. dobra"))
+```
+
 
