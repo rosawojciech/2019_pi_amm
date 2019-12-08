@@ -146,7 +146,7 @@ $H_0:$ nie istnieje zależność pomiędzy zmiennymi.
 
 $H_1:$ istnieje zależność pomiędzy zmiennymi.
 
-## Badamy zależność pomiędzy poczuciem upokorzenia, a jakością snu
+### Zależność pomiędzy poczuciem upokorzenia a jakością snu
 ```{r}
 r1 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu),
          method = "spearman")$p.value
@@ -154,17 +154,18 @@ r2 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu)
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendalla` wynosi `r r2`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia, a jakością snu.
+P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendalla` wynosi `r r2`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
 
-## Wykresy boxplot
+### Wykresy boxplot
 ```{r}
+#wydaje mi się, że te boxploty nic tak naprawdę nie mówią i są nieczytelne
 #par(mfrow=c(1,2))
 #boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "poziomy"))
 #boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
 #par(mfrow=c(1,1))
 ```
 
-## Wykresy barplot
+### Wykresy barplot
 ```{r}
 tab <- table(dane$upokorzenie, dane$jakosc_snu) 
 tab #Tabela kontyngencji
@@ -175,7 +176,7 @@ barplot(ttab, main = "Częstość odczuwania upokorzenia w zależności od jako�
 ```
 
 
-## Badamy zależność pomiędzy dietą a poczuciem radości
+### Zależność pomiędzy dietą a poczuciem radości
 ```{r}
 r3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "spearman")$p.value
@@ -183,9 +184,9 @@ r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendalla` wynosi `r r4`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą, a poczuciem radości.
+P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendalla` wynosi `r r4`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą a poczuciem radości.
 
-## Wykresy boxplot
+### Wykresy boxplot
 ```{r}
 #par(mfrow=c(1,2))
 #boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
@@ -193,15 +194,46 @@ P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendal
 #par(mfrow=c(1,1))
 ```
 
-## Wykresy barplot
+### Wykresy barplot
 ```{r}
-tab <- table(dane$dieta, dane$radosc) 
+tab <- table(dane$radosc, dane$dieta) 
 tab #Tabela kontyngencji
-barplot(tab, xlab="Poczucie radości", ylab="Rozkład rodzaju diety", col=c("antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1"), names.arg = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), legend.text = c("fast food", "żywność mocno przetworzona", "mięso i ciężkostrawne potrawy","warzywa i owoce", "dieta zbilansowana"))
+barplot(tab,  main = "Częstość odczuwania radości, w zależności od rodzaju diety", xlab="Rodzaj diety", ylab="Rozkład poczucia radości", col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"), legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), names.arg = c("fast food", "żywność przetw.", "mięso", "wegetariańska", "zbilans."))
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
-barplot(ttab, xlab="Poczucie radości", ylab="Procentowy rozkład rodzaju diety", col=c("antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1"), names.arg = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), legend.text = c("fast food", "żywność mocno przetworzona", "mięso i ciężkostrawne potrawy","warzywa i owoce", "dieta zbilansowana"))
-#tutaj coś jest bardzo nie halo, ponieważ z tego wykresu wynikają straszne głupoty
+barplot(ttab, main = "Częstość odczuwania radości, w zależności od rodzaju diety", xlab="Rodzaj diety", ylab="Procentowy rozkład poczucia radości", col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"), legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), names.arg = c("fast food", "żywność przetw.", "mięso","wegetariańska", "zbilans."))
 ```
 
+### Zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju
+
+```{r}
+r5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "spearman")$p.value
+r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi `r r5`, natomiast dla testu `tau-Kendalla` wynosi `r r6`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+
+```{r}
+tab <- table(dane$niepokoj, dane$liczba_osob_kontakty) 
+tab #Tabela kontyngencji
+barplot(tab,
+        main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
+        xlab="Liczba osób, z którymi utrzymuje się regularny kontakt", ylab="Rozkład poczucia niepokoju",
+        col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
+        names.arg = c("0", "1", "2-3", "4-5", "więcej niż 5"))
+ttab <- prop.table(tab, margin = 2)*100
+ttab # w procentach
+barplot(ttab,
+        main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
+        xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
+        ylab="Procentowy rozkład poczucia radości",
+        col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
+        names.arg = c("0", "1", "2-3","4-5", "więcej niż 5"))
+```
 
