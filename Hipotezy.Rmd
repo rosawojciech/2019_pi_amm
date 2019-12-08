@@ -148,9 +148,9 @@ $H_1:$ istnieje zależność pomiędzy zmiennymi.
 
 ### Zależność pomiędzy poczuciem upokorzenia a jakością snu
 ```{r}
-r1 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu),
+r1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
          method = "spearman")$p.value
-r2 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu),
+r2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
          method = "kendall")$p.value
 ```
 
@@ -169,10 +169,20 @@ P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendal
 ```{r}
 tab <- table(dane$upokorzenie, dane$jakosc_snu) 
 tab #Tabela kontyngencji
-barplot(tab, xlab="Jakość snu", ylab="Rozkład poczucia upokorzenia", col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"), names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"), legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+barplot(tab,
+        xlab="Jakość snu",
+        ylab="Rozkład poczucia upokorzenia",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"),
+        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
-barplot(ttab, main = "Częstość odczuwania upokorzenia w zależności od jakości snu", xlab="Jakość snu", ylab="Procentowy rozkład poczucia upokorzenia", col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"), names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"), legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+barplot(ttab,
+        main = "Częstość odczuwania upokorzenia w zależności od jakości snu", xlab="Jakość snu",
+        ylab="Procentowy rozkład poczucia upokorzenia",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"),
+        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
 ```
 
 
@@ -198,10 +208,22 @@ P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendal
 ```{r}
 tab <- table(dane$radosc, dane$dieta) 
 tab #Tabela kontyngencji
-barplot(tab,  main = "Częstość odczuwania radości, w zależności od rodzaju diety", xlab="Rodzaj diety", ylab="Rozkład poczucia radości", col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"), legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), names.arg = c("fast food", "żywność przetw.", "mięso", "wegetariańska", "zbilans."))
+barplot(tab,
+        main = "Częstość odczuwania radości, w zależności od rodzaju diety",
+        xlab="Rodzaj diety",
+        ylab="Rozkład poczucia radości",
+        col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"), 
+        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
+        names.arg = c("fast food", "żywność przetw.", "mięso", "wegetariańska", "zbilans."))
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
-barplot(ttab, main = "Częstość odczuwania radości, w zależności od rodzaju diety", xlab="Rodzaj diety", ylab="Procentowy rozkład poczucia radości", col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"), legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), names.arg = c("fast food", "żywność przetw.", "mięso","wegetariańska", "zbilans."))
+barplot(ttab,
+        main = "Częstość odczuwania radości, w zależności od rodzaju diety",
+        xlab="Rodzaj diety",
+        ylab="Procentowy rozkład poczucia radości",
+        col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
+        names.arg = c("fast food", "żywność przetw.", "mięso","wegetariańska", "zbilans."))
 ```
 
 ### Zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju
@@ -222,7 +244,8 @@ tab <- table(dane$niepokoj, dane$liczba_osob_kontakty)
 tab #Tabela kontyngencji
 barplot(tab,
         main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
-        xlab="Liczba osób, z którymi utrzymuje się regularny kontakt", ylab="Rozkład poczucia niepokoju",
+        xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
+        ylab="Rozkład poczucia niepokoju",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
         legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("0", "1", "2-3", "4-5", "więcej niż 5"))
@@ -235,5 +258,39 @@ barplot(ttab,
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
         legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("0", "1", "2-3","4-5", "więcej niż 5"))
+```
+
+### Zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń
+
+```{r}
+r7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "spearman")$p.value
+r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi `r r7`, natomiast dla testu `tau-Kendalla` wynosi `r r8`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+
+```{r}
+tab <- table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia) 
+tab #Tabela kontyngencji
+barplot(tab,
+        main = "Wykres zależności",
+        xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
+        ylab="Rozkład poczucia uzależnienia od urządzeń",
+        col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
+        names.arg = c("mniej niż 1", "1-2", "2-3", "3-4", "więcej niż 4"))
+ttab <- prop.table(tab, margin = 2)*100
+ttab # w procentach
+barplot(ttab,
+        main = "Wykres zależności",
+        xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
+        ylab="Procentowy rozkład poczucia uzależnienia od urządzeń",
+        col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
+        names.arg = c("mniej niż 1", "1-2", "2-3","3-4", "więcej niż 4"))
 ```
 
