@@ -172,9 +172,11 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla
 
 ### Wykresy słupkowe
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$upokorzenie, dane$jakosc_snu) 
 tab #Tabela kontyngencji
 barplot(tab,
+        main = "Oddczuwanie upokorzenia w zależności od jakości snu",
         xlab="Jakość snu",
         ylab="Rozkład poczucia upokorzenia",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
@@ -183,12 +185,17 @@ barplot(tab,
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
-        main = "Częstość odczuwania upokorzenia w zależności od jakości snu", xlab="Jakość snu",
+        main = "Odczuwanie upokorzenia w zależności od jakości snu",
+        xlab="Jakość snu",
         ylab="Procentowy rozkład poczucia upokorzenia",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
-        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"),
-        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
-#legend(x=10, y=90, title = "Jak często odczuwasz upokorzenie?", legend = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"), fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"))
+        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+       cex=0.9)
 ```
 
 
@@ -217,24 +224,35 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r3)`, natomiast dla
 ### Wykresy słupkowe
 
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$radosc, dane$dieta) 
 tab #Tabela kontyngencji
 barplot(tab,
-        main = "Częstość odczuwania radości, w zależności od rodzaju diety",
+        main = "Odczuwanie radości, w zależności od rodzaju diety",
         xlab="Rodzaj diety",
         ylab="Rozkład poczucia radości",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"), 
-        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
-        names.arg = c("fast food", "żywność przetw.", "mięso", "wegetariańska", "zbilans."))
+        names.arg = c("fast food", "przetworzona", "mięso", "wegetariańska", "zbilans."))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+       cex=0.9)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
-        main = "Częstość odczuwania radości, w zależności od rodzaju diety",
+        main = "Odczuwanie radości, w zależności od rodzaju diety",
         xlab="Rodzaj diety",
         ylab="Procentowy rozkład poczucia radości",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
-        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
-        names.arg = c("fast food", "żywność przetw.", "mięso","wegetariańska", "zbilans."))
+        names.arg = c("fast food", "przetworzona", "mięso","wegetariańska", "zbilans."))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+       cex=0.9)
 ```
 
 ### Hipoteza III
@@ -255,6 +273,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r5)`, natomiast dla
 ### Wykresy słupkowe
 
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$niepokoj, dane$liczba_osob_kontakty) 
 tab #Tabela kontyngencji
 barplot(tab,
@@ -262,8 +281,13 @@ barplot(tab,
         xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
         ylab="Rozkład poczucia niepokoju",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
-        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("0", "1", "2-3", "4-5", "więcej niż 5"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+       cex=0.9)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
@@ -271,8 +295,13 @@ barplot(ttab,
         xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
         ylab="Procentowy rozkład poczucia radości",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
-        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("0", "1", "2-3","4-5", "więcej niż 5"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+       cex=0.9)
 ```
 
 ```{r}
@@ -304,6 +333,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r7)`, natomiast dla
 ### Wykresy słupkowe
 
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia) 
 tab #Tabela kontyngencji
 barplot(tab,
@@ -311,8 +341,13 @@ barplot(tab,
         xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
         ylab="Rozkład poczucia uzależnienia od urządzeń",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
-        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("mniej niż 1", "1-2", "2-3", "3-4", "więcej niż 4"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+       cex=0.9)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
@@ -320,8 +355,13 @@ barplot(ttab,
         xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
         ylab="Procentowy rozkład poczucia uzależnienia od urządzeń",
         col=c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
-        legend.text = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"),
         names.arg = c("mniej niż 1", "1-2", "2-3","3-4", "więcej niż 4"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Poczucie uzależnienia",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("lightyellow3", "antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1", "darkorchid3"),
+       cex=0.75)
 ```
 
 ```{r}
@@ -353,22 +393,33 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r9)`, natomiast dla
 ### Wykresy słupkowe
 
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$jakosc_snu, dane$wyzn_pory_snu) 
 tab #Tabela kontyngencji
 barplot(tab,
         main="Czy masz wyznaczone pory snu?",
         ylab="Rozkład jakości snu",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
-        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"),
-        legend.text = c("bardzo zła", "kiepska", "przeciętna", "dobra", "b. dobra"))
+        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Jakość snu",
+       legend = c("b.zła", "kiepska", "przeciętna", "dobra", "b.dobra"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+       cex=0.8)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Czy masz wyznaczone pory snu?",
         ylab="Rozkład procentowy jakości snu",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
-        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"),
-        legend.text = c("bardzo zła", "kiepska", "przeciętna", "dobra", "b. dobra"))
+        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Jakość snu",
+       legend = c("b.zła", "kiepska", "przeciętna", "dobra", "b.dobra"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+       cex=0.8)
 ```
 
 ```{r}
@@ -400,6 +451,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r11)`, natomiast dl
 ### Wykresy słupkowe
 
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$zalamanie, dane$godziny_sportu) 
 tab #Tabela kontyngencji
 barplot(tab,
@@ -407,8 +459,13 @@ barplot(tab,
         xlab="Liczba godzin w tygodniu przeznaczonych na sport",
         ylab="Rozkład poczucia załamania",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
-        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"),
-        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Załamanie",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+       cex=0.8)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
@@ -416,8 +473,13 @@ barplot(ttab,
         xlab="Liczba godzin w tygodniu przeznaczonych na sport",
         ylab="Rozkład procentowy poczucia załamania",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
-        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"),
-        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Załamanie",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+       cex=0.8)
 ```
 
 ```{r}
@@ -449,22 +511,33 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r13)`, natomiast dl
 ### Wykresy słupkowe
 
 ```{r}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 tab <- table(dane$dobry_humor, dane$jakosc_posilkow) 
 tab #Tabela kontyngencji
 barplot(tab,
         main="Jak dużą uwagę przykładasz do jakości swoich posiłków?",
         ylab="Rozkład aktualnego humoru",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred"),
-        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"),
-        legend.text = c("zły", "kiepski", "średni", "dobry", "b. dobry"))
+        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Humor",
+       legend = c("zły", "kiepski", "średni", "dobry", "b.dobry"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred"),
+       cex=0.95)
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Jak dużą uwagę przykładasz do jakości swoich posiłków?",
         ylab="Rozkład procentowy aktualnego humoru",
         col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred"),
-        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"),
-        legend.text = c("zły", "kiepski", "średni", "dobry", "b. dobry"))
+        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Humor",
+       legend = c("zły", "kiepski", "średni", "dobry", "b.dobry"),
+       fill = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred"),
+       cex=0.95)
 #nie wiem czy ten opis faktycznie jest poprawny
 ```
 
