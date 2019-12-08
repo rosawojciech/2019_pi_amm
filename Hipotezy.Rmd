@@ -157,55 +157,51 @@ r2 <- cor.test(x = as.numeric(dane$upokorzenie), y = as.numeric(dane$jakosc_snu)
 P-value dla testu `rho-Spearmana` wynosi `r r1`, natomiast dla testu `tau-Kendalla` wynosi `r r2`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje zależność pomiędzy poczuciem upokorzenia, a jakością snu.
 
 ## Wykresy boxplot
-
 ```{r}
-par(mfrow=c(1,2))
-boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "poziomy")
-boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
-par(mfrow=c(1,1))
+#par(mfrow=c(1,2))
+#boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "poziomy"))
+#boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
+#par(mfrow=c(1,1))
 ```
 
-##Wykresy barplot
+## Wykresy barplot
 ```{r}
 tab <- table(dane$upokorzenie, dane$jakosc_snu) 
 tab #Tabela kontyngencji
-#najciemniejszy kolor - nigdy nie odczuwa upokorzenia
-#najjaśniejszy kolor - zawsze odczuwa upokorzenie
-barplot(tab, xlab="Jakość snu", ylab="Rozkład poczucia upokorzenia", sub="Najciemniejszy kolor - nigdy nie odczuwa upokorzenia")
+barplot(tab, xlab="Jakość snu", ylab="Rozkład poczucia upokorzenia", col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"), names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"), legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
-barplot(ttab, xlab="Jakość snu", ylab="Procentowy rozkład poczucia upokorzenia", sub="Najciemniejszy kolor - nigdy nie odczuwa upokorzenia")
+barplot(ttab, main = "Częstość odczuwania upokorzenia w zależności od jakości snu", xlab="Jakość snu", ylab="Procentowy rozkład poczucia upokorzenia", col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"), names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"), legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
 ```
 
 
-##Badamy zależność pomiędzy dietą a poczuciem radości
+## Badamy zależność pomiędzy dietą a poczuciem radości
 ```{r}
-cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+r3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "spearman")$p.value
-cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
 ```
 
-Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą, a poczuciem radości.
+P-value dla testu `rho-Spearmana` wynosi `r r3`, natomiast dla testu `tau-Kendalla` wynosi `r r4`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje zależność pomiędzy dietą, a poczuciem radości.
 
 ## Wykresy boxplot
 ```{r}
-par(mfrow=c(1,2))
-boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
-boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
-par(mfrow=c(1,1))
+#par(mfrow=c(1,2))
+#boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
+#boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
+#par(mfrow=c(1,1))
 ```
 
-##Wykresy barplot
+## Wykresy barplot
 ```{r}
 tab <- table(dane$dieta, dane$radosc) 
 tab #Tabela kontyngencji
-#najciemniejszy kolor - dieta fast food
-#najjaśniejszy kolor - zbilansowana dieta
-barplot(tab, xlab="Poczucie radości", ylab="Rozkład rodzaju diety", sub="Najciemniejszy kolor - dieta fast food")
+barplot(tab, xlab="Poczucie radości", ylab="Rozkład rodzaju diety", col=c("antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1"), names.arg = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), legend.text = c("fast food", "żywność mocno przetworzona", "mięso i ciężkostrawne potrawy","warzywa i owoce", "dieta zbilansowana"))
 ttab <- prop.table(tab, margin = 2)*100
 ttab # w procentach
-barplot(ttab, xlab="Poczucie radości", ylab="Procentowy rozkład rodzaju diety", sub="Najciemniejszy kolor - dieta fast food")
+barplot(ttab, xlab="Poczucie radości", ylab="Procentowy rozkład rodzaju diety", col=c("antiquewhite1", "cyan3", "chartreuse", "darkorange1", "firebrick1"), names.arg = c("nigdy", "b. rzadko", "rzadko", "czasami", "często", "b. często", "zawsze"), legend.text = c("fast food", "żywność mocno przetworzona", "mięso i ciężkostrawne potrawy","warzywa i owoce", "dieta zbilansowana"))
+#tutaj coś jest bardzo nie halo, ponieważ z tego wykresu wynikają straszne głupoty
 ```
 
 
