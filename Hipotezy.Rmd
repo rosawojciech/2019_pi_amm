@@ -336,4 +336,39 @@ barplot(ttab,
         legend.text = c("bardzo zła", "kiepska", "przeciętna", "dobra", "b. dobra"))
 ```
 
+### Zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania
+
+```{r}
+r11 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "spearman")$p.value
+r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r11)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+
+### Wykresy słupkowe
+
+```{r}
+tab <- table(dane$zalamanie, dane$godziny_sportu) 
+tab #Tabela kontyngencji
+barplot(tab,
+        main="Wykres zależności",
+        xlab="Liczba godzin w tygodniu przeznaczonych na sport",
+        ylab="Rozkład poczucia załamania",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"),
+        legend.text = c("nigdy", "bardzo rzadko", "rzadko", "czasami", "często", "bardzo często", "zawsze"))
+ttab <- prop.table(tab, margin = 2)*100
+ttab # w procentach
+barplot(ttab,
+        main = "Wykres zależności",
+        xlab="Liczba godzin w tygodniu przeznaczonych na sport",
+        ylab="Rozkład poczucia załamania",
+        col = c("yellow", "limegreen", "royalblue3", "purple", "mediumvioletred", "maroon1", "seashell1"),
+        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"),
+        )
+```
 
