@@ -103,6 +103,7 @@ colnames(dane) <- lab
     as.numeric(dane$zly_nastroj)+as.numeric(dane$roz_spok)-as.numeric(dane$szaro_bezn)+
     as.numeric(dane$dobry_humor)+as.numeric(dane$pogodny)-as.numeric(dane$przygnebiony)-
     as.numeric(dane$zle_samop)+as.numeric(dane$dobre_samop) #uczucia ze skalą 1-5
+  suma_samop1 <- suma_samop1/length(samopoczucie1)
   suma_samop2 <- as.numeric(dane$radosc)-as.numeric(dane$niepokoj)-as.numeric(dane$strach)+
     as.numeric(dane$milosc)-as.numeric(dane$gniew)+as.numeric(dane$wesolosc)-
     as.numeric(dane$upokorzenie)-as.numeric(dane$smutek)-as.numeric(dane$wzburzenie)-as.numeric(dane$lek)-
@@ -110,5 +111,8 @@ colnames(dane) <- lab
     as.numeric(dane$szczescie)-as.numeric(dane$wscieklosc)+as.numeric(dane$oddanie)+as.numeric(dane$zadowolenie)+
     as.numeric(dane$czulosc)-as.numeric(dane$wstyd)-as.numeric(dane$pocz_winy)+
     as.numeric(dane$przywiazanie)-as.numeric(dane$depresja)-as.numeric(dane$nieszczescie) #uczucia ze skalą 1-7
+  suma_samop2 <- suma_samop2/length(samopoczucie2)
   dane <- cbind(dane, suma_samop1, suma_samop2)
 } #propozycja sumowania samopoczucia (pozytywne uczucia z plusem, negatywne z minusem)
+
+save(dane, file = "dane.RData")
