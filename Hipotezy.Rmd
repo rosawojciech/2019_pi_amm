@@ -21,6 +21,7 @@ library(tidyverse)
 library(lmtest)
 library(ggplot2)
 library(ggcorrplot)
+library(stargazer)
 
 colf <- colorRampPalette(c("white","royalblue"))
 ```
@@ -67,9 +68,7 @@ par(mfrow=c(1,1))
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$upokorzenie, dane$jakosc_snu)
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Odczuwanie upokorzenia w zależności od jakości snu",
@@ -110,9 +109,7 @@ par(mfrow=c(1,1))
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$radosc, dane$dieta) 
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$radosc, dane$dieta), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Odczuwanie radości, w zależności od rodzaju diety",
@@ -146,9 +143,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r5)`, natomiast dla
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$niepokoj, dane$liczba_osob_kontakty) 
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$niepokoj, dane$liczba_osob_kontakty), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
@@ -193,9 +188,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r7)`, natomiast dla
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia) 
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Wykres zależności",
@@ -240,9 +233,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r9)`, natomiast dla
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$jakosc_snu, dane$wyzn_pory_snu) 
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$jakosc_snu, dane$wyzn_pory_snu), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Czy masz wyznaczone pory snu?",
@@ -286,9 +277,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r11)`, natomiast dl
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$zalamanie, dane$godziny_sportu) 
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$zalamanie, dane$godziny_sportu), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Wykres zależności",
@@ -333,9 +322,7 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r13)`, natomiast dl
 ### Wykresy słupkowe
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-tab <- table(dane$dobry_humor, dane$jakosc_posilkow) 
-tab #Tabela kontyngencji
-ttab <- prop.table(tab, margin = 2)*100
+ttab <- prop.table(table(dane$dobry_humor, dane$jakosc_posilkow), margin = 2)*100
 ttab # w procentach
 barplot(ttab,
         main = "Jak dużą uwagę przykładasz do jakości swoich posiłków?",
