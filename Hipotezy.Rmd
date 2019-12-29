@@ -1,8 +1,8 @@
 ---
 title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -469,7 +469,6 @@ legend("topright",
        legend = c("zły", "kiepski", "średni", "dobry", "b.dobry"),
        fill = colf(5),
        cex=0.95)
-#nie wiem czy ten opis faktycznie jest poprawny
 ```
 
 ```{r}
@@ -534,7 +533,7 @@ kobiety <- subset(dane, dane$plec == "kobieta")
 mezczyzni <- subset(dane, dane$plec == "mężczyzna")
 ```
 
-### Badanie równosći średnich
+### Badanie równości średnich
 
 ```{r}
 pval <- var.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna)$p.value
@@ -557,7 +556,7 @@ mod <- lm(ocena_samop_ogolna~wiek, data = dane)
 ```
 
 ```{r results = 'asis'}
-stargazer(mod, type = "html")
+stargazer(mod, type = "latex", header=F)
 ```
 
 
