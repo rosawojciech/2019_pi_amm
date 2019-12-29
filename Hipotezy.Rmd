@@ -485,35 +485,81 @@ Zarówno współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` 
 
 ## Hipoteza VIII
 
-Płeć a ogólna ocena samopoczucia
+Badanie zależności między płcią a ogólną oceną samopoczucia.
 
-
-
+### Średnia ocena samopoczucia w grupie kobiet i mężczyzn
 
 ```{r}
-shapiro.test(dane$ocena_samop_ogolna) #nie ma rozkładu normalnego
+tabelka <- tabular((`Ogólna ocena samopoczucia` = dane$ocena_samop_ogolna)~  Format(digits =2)*(`Płeć` = dane$plec)*Heading()*mean)
+
 
 ```
 
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = F)
+
+```
+
+### Wykres boxplot
 
 ```{r}
 boxplot(dane$ocena_samop_ogolna~dane$plec)
 
 ```
 
+### Badanie zależności
+
 ```{r}
-wilcox.test(ocena_samop_ogolna~plec, data = dane)
+shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
+
 ```
-Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+
+P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi `r sprintf("%.5f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
+
+
+
+
+```{r}
+pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
+```
+
+
+P-value z testu Manna - Whitney'a - Wilcoxona wynosi `r sprintf("%.5f", pval)`. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+
+```{r}
+kobiety <- subset(dane, dane$plec == "kobieta")
+mezczyzni <- subset(dane, dane$plec == "mężczyzna")
+```
+
+### Badanie równosći średnich
+
+```{r}
+pval <- var.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna)$p.value
+```
+
+Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn (p-value `r sprintf("%.5f", pval)`), zatem stosujemy test T dla średnich.
+
+```{r}
+pval <- t.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna, var.equal = T, paired = F)$p.value
+```
+
+P-value z testu T wynosi `r sprintf("%.5f", pval)`, zatem odrzucamy hipotezę o równości średnich. Średnia ogólna ocena samopoczucia różni się istotnie w grupach kobiet i mężczyzn.
 
 ## Hipoteza IX
 
-Wiek a ogólna ocena samopoczucia
+Badanie zależności między wiekiem a ogólną oceną samopoczucia.
 
 ```{r}
 mod <- lm(ocena_samop_ogolna~wiek, data = dane)
-summary(mod)
 ```
+
+```{r results = 'asis'}
+stargazer(mod, type = "html")
+```
+
 
 Istnieje istotna zależność pomiędzy ogólną oceną samopoczucia a wiekiem.
 
@@ -527,7 +573,7 @@ dane %>%
 
 Na niebiesko regresja nieparametryczna, na czerwono liniowa.
 
-```{r}
+```{r include = F}
 plot(mod)
 nortest::lillie.test(residuals(mod))
 shapiro.test(residuals(mod)) #nie ma normalności - zle
@@ -539,7 +585,7 @@ lmtest::raintest(mod, order.by=~fitted(mod))
 lmtest::resettest(mod, power = 3, type = "regressor") #zależność jest liniowa - ok
 ```
 
-Na podstawie powyższych testów mamy, że model spełnia założenia Gaussa - Markova, a jedynym problemem jest brak normalności rozkładu reszt (chociaż na wykresach diagnostycznych wygląda trochę na heterogeniczność wariancji).
+Na podstawie wykresów diagnostycznych oraz odpowiednich testów mamy, że model spełnia założenia Gaussa - Markova, a jedynym problemem jest brak normalności rozkładu reszt (chociaż na wykresach diagnostycznych wygląda trochę na heterogeniczność wariancji).
 
 ## Wnioski
 
