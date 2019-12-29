@@ -16,7 +16,7 @@ lab <- c("timestamp", "plec", "wiek", "zly_humor", "swietnie",
          "posiadanie_zaufanej_osoby", "liczba_osob_kontakty",
          "znaczenie_kontaktow")
 colnames(dane) <- lab
-#dane <- dane[2:ncol(dane)] #pozbywamy się kolumny timestamp
+dane <- dane[2:ncol(dane)] #pozbywamy się kolumny timestamp
 } #wczytanie danych, nadanie etykiet
 {dane$wiek <- as.character(dane$wiek)
   indeksy <- which(nchar(dane$wiek)>3) #53, 82, 107, 219
@@ -52,6 +52,7 @@ colnames(dane) <- lab
                                            levels = c("mniej niż 4", "4-6", "6-8", "8-10", "więcej niż 10"))
   dane$liczba_przespanych_godzin <- as.factor(dane$liczba_przespanych_godzin)
   dane$jakosc_snu <- as.factor(dane$jakosc_snu)  
+  dane$wyzn_pory_snu <- as.factor(dane$wyzn_pory_snu)
 }#levels i as.factor - sen
 {
   dane$godziny_sportu <- factor(dane$godziny_sportu, levels = c("nie uprawiam żadnego sportu",
@@ -103,7 +104,7 @@ colnames(dane) <- lab
     as.numeric(dane$zly_nastroj)+as.numeric(dane$roz_spok)-as.numeric(dane$szaro_bezn)+
     as.numeric(dane$dobry_humor)+as.numeric(dane$pogodny)-as.numeric(dane$przygnebiony)-
     as.numeric(dane$zle_samop)+as.numeric(dane$dobre_samop) #uczucia ze skalą 1-5
-  suma_samop1 <- suma_samop1/length(samopoczucie1)
+  suma_samop1sr <- suma_samop1/length(samopoczucie1)
   suma_samop2 <- as.numeric(dane$radosc)-as.numeric(dane$niepokoj)-as.numeric(dane$strach)+
     as.numeric(dane$milosc)-as.numeric(dane$gniew)+as.numeric(dane$wesolosc)-
     as.numeric(dane$upokorzenie)-as.numeric(dane$smutek)-as.numeric(dane$wzburzenie)-as.numeric(dane$lek)-
@@ -111,8 +112,9 @@ colnames(dane) <- lab
     as.numeric(dane$szczescie)-as.numeric(dane$wscieklosc)+as.numeric(dane$oddanie)+as.numeric(dane$zadowolenie)+
     as.numeric(dane$czulosc)-as.numeric(dane$wstyd)-as.numeric(dane$pocz_winy)+
     as.numeric(dane$przywiazanie)-as.numeric(dane$depresja)-as.numeric(dane$nieszczescie) #uczucia ze skalą 1-7
-  suma_samop2 <- suma_samop2/length(samopoczucie2)
-  dane <- cbind(dane, suma_samop1, suma_samop2)
+  suma_samop2sr <- suma_samop2/length(samopoczucie2)
+  ocena_samop_ogolna <- suma_samop1+suma_samop2
+  dane <- cbind(dane, suma_samop1sr, suma_samop2sr, ocena_samop_ogolna)
 } #propozycja sumowania samopoczucia (pozytywne uczucia z plusem, negatywne z minusem)
 
 save(dane, file = "dane.RData")
