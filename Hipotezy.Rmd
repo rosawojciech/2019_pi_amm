@@ -1,8 +1,8 @@
 ---
 title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -16,27 +16,33 @@ knitr::opts_chunk$set(echo = F,
 ```{r}
 library(alr3)
 library(kableExtra)
+library(magrittr)
 library(plyr)
 library(tidyverse)
 library(lmtest)
 library(ggplot2)
 library(ggcorrplot)
 library(stargazer)
+library(tables)
+library(Hmisc)
 
 colf <- colorRampPalette(c("white","royalblue"))
 ```
 
-#Wstęp
+# Wstęp
+
 Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia.
 
-#Opis danych
+# Opis danych
+
 (Import, obróbka, wstępna analiza, testy na normalność)
 
 ```{r}
 load("dane.RData")
 ```
 
-#Hipotezy badawcze oraz ich weryfikacja
+# Hipotezy badawcze oraz ich weryfikacja
+
 
 $H_0:$ nie istnieje zależność pomiędzy zmiennymi.
 
@@ -51,11 +57,15 @@ Badanie, czy istnieje zależność pomiędzy poczuciem upokorzenia a jakością 
 ```{r}
 r1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
          method = "spearman")$p.value
+wsp_kor1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
+         method = "spearman")$estimate
 r2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
          method = "kendall")$p.value
+wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
+         method = "kendall")$estimate
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
 
 ### Wykresy boxplot
 ```{r}
@@ -65,11 +75,32 @@ boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
 
+
+### Tabela kontygencji
+
+
+```{r}
+ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
+ tabelka <- tabular((Upokorzenie = dane$upokorzenie)~  Format(digits =2)*(`Jakość snu` = dane$jakosc_snu)*Heading()*Percent("col"))
+
+```
+
+
+
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
-ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
-ttab # w procentach
 barplot(ttab,
         main = "Odczuwanie upokorzenia w zależności od jakości snu",
         xlab="Jakość snu",
@@ -83,6 +114,7 @@ legend("topright",
        fill = colf(7),
        cex=0.9)
 ```
+
 
 
 ## Hipoteza II
@@ -106,11 +138,28 @@ boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
 
+### Tabela kontygencji
+
+```{r}
+tabelka <- tabular((`Poczucie radości` = dane$radosc)~  Format(digits =2)*(`Jakość diety` = dane$dieta)*Heading()*Percent("col"))
+
+
+```
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$radosc, dane$dieta), margin = 2)*100
-ttab # w procentach
+
 barplot(ttab,
         main = "Odczuwanie radości, w zależności od rodzaju diety",
         xlab="Rodzaj diety",
@@ -140,11 +189,28 @@ r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
 
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r5)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r6)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
 
+### Tabela kontygencji
+
+```{r}
+tabelka <- tabular((`Niepokój` = dane$niepokoj)~  Format(digits =2)*(`Liczba bliskich znajomych` = dane$liczba_osob_kontakty)*Heading()*Percent("col"))
+
+
+```
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$niepokoj, dane$liczba_osob_kontakty), margin = 2)*100
-ttab # w procentach
+
 barplot(ttab,
         main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
         xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
@@ -185,11 +251,28 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
 
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r7)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r8)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
 
+### Tabela kontygencji
+
+```{r}
+tabelka <- tabular((`Poczucie uzależnienia` = dane$poczucie_uzaleznienia_urzadzenia)~  Format(digits =2)*(`Godziny spędzone na używaniu urządzeń elektronicznych` = dane$godziny_rozrywki_urzadzenia)*Heading()*Percent("col"))
+
+
+```
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia), margin = 2)*100
-ttab # w procentach
+
 barplot(ttab,
         main = "Wykres zależności",
         xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
@@ -230,11 +313,28 @@ r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
 
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r9)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r10)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
 
+### Tabela kontygencji
+
+```{r}
+tabelka <- tabular((`Jakość snu` = dane$jakosc_snu)~  Format(digits =2)*(`Posiadanie wyznaczonych pór snu` = dane$wyzn_pory_snu)*Heading()*Percent("col"))
+
+
+```
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$jakosc_snu, dane$wyzn_pory_snu), margin = 2)*100
-ttab # w procentach
+
 barplot(ttab,
         main = "Czy masz wyznaczone pory snu?",
         ylab="Rozkład procentowy jakości snu",
@@ -274,11 +374,28 @@ r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
 
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r11)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
 
+### Tabela kontygencji
+
+```{r}
+tabelka <- tabular((`Załamanie` = dane$zalamanie)~  Format(digits =2)*(`Liczba godzin przeznaczonych na sport` = dane$godziny_sportu)*Heading()*Percent("col"))
+
+
+```
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$zalamanie, dane$godziny_sportu), margin = 2)*100
-ttab # w procentach
+
 barplot(ttab,
         main = "Wykres zależności",
         xlab="Liczba godzin w tygodniu przeznaczonych na sport",
@@ -319,11 +436,28 @@ r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
 
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r13)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r14)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
 
+### Tabela kontygencji
+
+```{r}
+tabelka <- tabular((`Dobry humor` = dane$dobry_humor)~  Format(digits =2)*(`Jakość posiłków` = dane$jakosc_posilkow)*Heading()*Percent("col"))
+
+
+```
+
+```{r results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
 ### Wykresy słupkowe
+
 ```{r}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$dobry_humor, dane$jakosc_posilkow), margin = 2)*100
-ttab # w procentach
+
 barplot(ttab,
         main = "Jak dużą uwagę przykładasz do jakości swoich posiłków?",
         ylab="Rozkład procentowy aktualnego humoru",
@@ -349,5 +483,73 @@ wsp_kor14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
 
 Zarówno współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszące odpowiednio `r wsp_kor13` oraz `r wsp_kor14`, jak i wykresy słupkowe jasno wskazują na istotną zależność pomiędzy badanymi zmiennymi. Im większe znaczenie ma jakość spożywanych posiłków, tym lepszy humor się odczuwa.
 
-##Wnioski
-##Bibliografia
+## Hipoteza VIII
+
+Płeć a ogólna ocena samopoczucia
+
+
+
+
+```{r}
+shapiro.test(dane$ocena_samop_ogolna) #nie ma rozkładu normalnego
+
+```
+
+
+```{r}
+boxplot(dane$ocena_samop_ogolna~dane$plec)
+
+```
+
+```{r}
+wilcox.test(ocena_samop_ogolna~plec, data = dane)
+```
+Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+
+## Hipoteza IX
+
+Wiek a ogólna ocena samopoczucia
+
+```{r}
+mod <- lm(ocena_samop_ogolna~wiek, data = dane)
+summary(mod)
+```
+
+Istnieje istotna zależność pomiędzy ogólną oceną samopoczucia a wiekiem.
+
+```{r}
+dane %>%
+  ggplot(aes(x = wiek, y = ocena_samop_ogolna)) +
+  geom_point() +
+  geom_smooth(se = F)+
+  geom_smooth(method = lm, color = "red", se = F)
+```
+
+Na niebiesko regresja nieparametryczna, na czerwono liniowa.
+
+```{r}
+plot(mod)
+nortest::lillie.test(residuals(mod))
+shapiro.test(residuals(mod)) #nie ma normalności - zle
+lmtest::gqtest(mod, order.by = ~fitted(mod))
+lmtest::hmctest(mod, order.by = ~fitted(mod))
+lmtest::bptest(mod) #nie ma heterogeniczności - ok
+lmtest::bgtest(mod, order.by = ~fitted(mod), order = 3) #nie ma autokorelacji reszt - ok
+lmtest::raintest(mod, order.by=~fitted(mod))
+lmtest::resettest(mod, power = 3, type = "regressor") #zależność jest liniowa - ok
+```
+
+Na podstawie powyższych testów mamy, że model spełnia założenia Gaussa - Markova, a jedynym problemem jest brak normalności rozkładu reszt (chociaż na wykresach diagnostycznych wygląda trochę na heterogeniczność wariancji).
+
+## Wnioski
+
+## Bibliografia
+
+
+
+
+Skale do Pomiaru Nastroju i Sześciu
+Emocji, Bogdan Wojciszke i Wiesław Baryła
+
+
+Wspomaganie Statystycznej Analizy Wyników Badań Empirycznych w STATISTICA 9, Janusz Wątroba, StatSoft Polska Sp. z o. o.
