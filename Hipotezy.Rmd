@@ -25,17 +25,54 @@ library(ggcorrplot)
 library(stargazer)
 library(tables)
 library(Hmisc)
+library(tinytex)
 
 colf <- colorRampPalette(c("white","royalblue"))
 ```
 
 # Wstęp
 
-Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia.
+Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia. Zbadamy wpływ na odczuwanie poszczególnych emocji cyznników z pięciu grup: dotyczących snu, diety, aktywności fizycznej, kontaktów towarzyskich oraz używania urządzeń elektronicznych. Sprawdzimy, czy średnie samopoczucie różni się pomiędzy płciami oraz pomiędzy różnymi grupami wiekowymi.
 
 # Opis danych
 
 (Import, obróbka, wstępna analiza, testy na normalność)
+
+## Zbieranie danych, opis badanej grupy
+
+Dane zebraliśmy na podstawie ankiety. Pytania dotyczące emocji pochodzą z artykułu "Skale do Pomiaru Nastroju i Sześciu Emocji" autorstwa Bogdana Wojciszke i Wiesława Baryły. Pozostałe pytania są naszego autorstwa. Ankietę stworzyliśmy przy pomocą Formularzy Google i rozesłaliśmy respondentom drogą internetową.
+
+Przebadana przez nas grupa składała się z 240 osób. Spośród nich 48.3% było kobietami (a zatem 51.7% było mężczyznami, bo nie daliśmy do wyboru opcji typu "nie wiem, jakiej płci jestem"). Większość osób (trochę ponad połowa) było w wieku co najwyżej 23 lat (w tym aż 30% w wieku 21 lat).
+
+Pierwsze 10 pytań były to zdania dotyczące aktualnego samopoczucia. Należało ocenić w skali od 1 do 5, jak bardzo zgadzasz się z danym twierdzeniem. Po nich następowały 24 uczucia takie jak radość, złość, depresja itp. Należało ocenić w skali od 1 do 7 (od "nigdy" do "zawsze") jak często odczuwasz daną emocję.
+
+Potem pojawiały się pytania o czynniki, których wpływ na samopoczucie chcemy zbadać. Każdego z pięciu poniższych czynników dotyczyły trzy pytania:
+
+- sen: liczba godzin przespanych w ciągu doby (do wyboru z 5 odpowiedzi), posiadanie wyznaczonych godzin snu (ocena w skali od 1 do 5), jakość snu (ocena w skali od 1 do 5)
+
+- aktywność fizyczna: ilość godzin poświęcana tygodniowo na sport (do wyboru z 5 odpowiedzi), najczęściej wybierany środek transportu (do wyboru z 5 odpowiedzi, w tym możliwość podania własnej odpowiedzi przy opcji "inne"), kondycja fizyczna (ocena w skali od 1 do 5)
+
+- używanie urządzeń elektronicznych: ilość godzin spędzana w ciągu dnia na korzystaniu z urządzeń elektronicznych w celu pracy/nauki (do wyboru z 5 odpowiedzi), ilość godzin spędzana w ciągu dnia na korzystaniu z urządzeń elektronicznych w celu rozrywki (do wyboru z 5 odpowiedzi), poczucie uzależnienia od urządzeń elektronicznych (ocena w skali od 1 do 5)
+
+- dieta: przeważający składnik w diecie (do wyboru z 5 odpowiedzi), znaczenie jakości posiłków (do wyboru z 5 odpowiedzi), regularność posiłków (do wyboru z 5 odpowiedzi)
+
+- kontakty towarzyskie: posiadanie bliskich osób, na których można polegać (do wyboru z 5 odpowiedzi), liczba bliższych znajomych (do wyboru z 5 odpowiedzi), znaczenie kontaktów z innymi ludźmi (ocena w skali od 1 do 5)
+
+Jak widać, wszystkie te czynniki były oceniane w skali od 1 do 5, a czynniki dotyczące samopoczucia bądź w skali od 1 do 7, bądź w skali od 1 do 5. Zbadamy zarówno zależności pomiędzy pojedynczymi czynnikami, jak również pomiędzy zsumowanymi, na przykład Ogólna ocena samopoczucia.
+
+## Import i oczyszczanie danych
+
+Do R zaimportowaliśmy dane z pliku `.xlsx`. Przy tworzeniu ankiety zastrzegliśmy, że na każde pytanie trzeba odpowiedzieć, dlatego nie mieliśmy problemu z brakami danych. W kolumnie `wiek` mieliśmy kilka nieprawidłowo wprowadzonych danych, większość osób podawała wiek jako liczbę, ale niektórzy pisali np. "21 lat". Poprawiliśmy to i zmieniliśmy typ kolumny na numeryczny. Musieliśmy też poprawić kilka odpowiedzi na pytanie o jakość posiłków, ponieważ zmieniliśmy jedną z możliwych odpowiedzi w ankiecie już po rozpoczęciu zbierania danych.
+
+Wszystkim kolumnom zmieniliśmy nazwy, tak aby pozbyć się polskich znaków i odstępów, oraz żeby ułatwić sobie pracę z danymi.
+
+Typ danych w kolumnach, w których możliwych było 5 odpowiedzi na pytanie, zmieniliśmy na `factor`, i uszeregowaliśmy od odpowiedzi, która według nas w danym pytaniu była najgorsza, do najlepszej.
+
+W pytaniach, gdzie należało oceniać czynnik w skali od 1 do 5 lub od 1 do 7, także zmieniliśmy typ na `factor`.
+
+Dodaliśmy także kolumnę z Ogólną oceną samopoczucia, w której zsumowaliśmy odpowiedzi z pytań o emocje - pozytywne uczucia sumowaliśmy z plusem, a negatywne z minusem.
+
+Te działania zostały wykonane w skrypcie `oczyszczanie_danych.R`, który załączymy do niniejszego raportu. Na koniec zapisaliśmy dane do pliku `dane.RData`.
 
 ```{r}
 load("dane.RData")
@@ -586,9 +623,39 @@ lmtest::resettest(mod, power = 3, type = "regressor") #zależność jest liniowa
 
 Na podstawie wykresów diagnostycznych oraz odpowiednich testów mamy, że model spełnia założenia Gaussa - Markova, a jedynym problemem jest brak normalności rozkładu reszt (chociaż na wykresach diagnostycznych wygląda trochę na heterogeniczność wariancji).
 
-## Wnioski
+## Hipoteza X
 
-## Bibliografia
+Zamiast badać związek pomiędzy wiekiem a średnim samopoczuciem, możemy też sprawdzić, czy średnie samopoczucie różni się w kilku grupach wiekowych (ANOVA?), np. poniżej 18, 18-25, powyżej 25.
+
+# Wnioski
+
+Wykazaliśmy następujące związki:
+
+- wraz ze wzrostem liczby bliskich znajomych, spada częstość odczuwania niepokoju
+
+- im więcej godzin spędzamy na korzystaniu z urządzeń elektronicznych dla rozrywki, tym bardziej czujemy się od nich uzależnieni (co wydaje się oczywistym związkiem, i według testów statystycznych jest prawie pewne, ponieważ p-value było bardzo małe dla tej hipotezy, praktycznie zero)
+
+- z podobną pewnością jak powyższą hipotezę, wykazaliśmy, że im bardziej regularne pory snu, tym lepsza jest jego jakość
+
+- im więcej godzin tygodniowo poświęca się na sport, tym rzadziej odczuwa się załamanie
+
+- im większą wagę ktoś przywiązuje do jakości swoich posiłków, tym lepszy ma humor
+
+- zależność między wiekiem a samopoczuciem można opisać modelem liniowym
+
+Wykazaliśmy także, że nie zachodzą związki:
+
+- pomiędzy jakością snu a poczuciem upokorzenia - chociaż tutaj wynik był na krawędzi, ocierał się o wniosek, że im gorsza jakość snu, tym częściej odczuwamy upokorzenie
+
+- pomiędzy dietą a poczuciem radości
+
+
+Porównując wyniki w różnych podgrupach, odkryliśmy, że:
+
+- średnia ocena ogólna samopoczucia różniła się między grupą kobiet a mężczyzn, w dodatku była znacznie niższa (-8) w grupie kobiet niż mężczyzn (3.2)
+
+
+# Bibliografia
 
 
 
