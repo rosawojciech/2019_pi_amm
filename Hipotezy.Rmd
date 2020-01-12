@@ -1,8 +1,10 @@
 ---
 title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
 output:
-  pdf_document: default
-  html_document: default
+  pdf_document:
+    toc: true
+    toc_depth: 4
+lang: pl
 editor_options:
   chunk_output_type: console
 ---
