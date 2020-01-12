@@ -2,8 +2,9 @@
 title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
 output:
   pdf_document:
+    number_sections: true
     toc: true
-    toc_depth: 4
+    toc_depth: 2
 lang: pl
 editor_options:
   chunk_output_type: console
@@ -31,6 +32,8 @@ library(tinytex)
 
 colf <- colorRampPalette(c("white","royalblue"))
 ```
+
+\newpage 
 
 # Wstęp
 
