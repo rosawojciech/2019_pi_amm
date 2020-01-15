@@ -1,5 +1,6 @@
 ---
 title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
+author: "Marcin Dziadosz, Alicja Hołowiecka, Matylda Jankowska"
 output:
   pdf_document:
     number_sections: true
