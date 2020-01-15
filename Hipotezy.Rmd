@@ -8,6 +8,7 @@ output:
 lang: pl
 editor_options:
   chunk_output_type: console
+bibliography: bibliografia.bib
 ---
 
 ```{r setup, include=FALSE, results='asis'}
@@ -32,6 +33,7 @@ library(tinytex)
 
 colf <- colorRampPalette(c("white","royalblue"))
 ```
+
 
 \newpage 
 
@@ -665,8 +667,5 @@ Porównując wyniki w różnych podgrupach, odkryliśmy, że:
 
 
 
-Skale do Pomiaru Nastroju i Sześciu
-Emocji, Bogdan Wojciszke i Wiesław Baryła
-
-
-Wspomaganie Statystycznej Analizy Wyników Badań Empirycznych w STATISTICA 9, Janusz Wątroba, StatSoft Polska Sp. z o. o.
+[@nastroj]
+[@testy]
