@@ -1,14 +1,18 @@
 ---
 title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
 author: "Marcin Dziadosz, Alicja Hołowiecka, Matylda Jankowska"
-output:
-  pdf_document:
-    number_sections: true
-    toc: true
-    toc_depth: 2
-lang: pl
 editor_options:
   chunk_output_type: console
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '2'
+lang: pl
 bibliography: bibliografia.bib
 ---
 
@@ -18,7 +22,7 @@ knitr::opts_chunk$set(echo = F,
                       warning = F)
 ```
 
-```{r}
+```{r biblioteki}
 library(alr3)
 library(kableExtra)
 library(magrittr)
@@ -31,6 +35,7 @@ library(stargazer)
 library(tables)
 library(Hmisc)
 library(tinytex)
+library(plotly)
 
 colf <- colorRampPalette(c("white","royalblue"))
 ```
@@ -43,6 +48,8 @@ colf <- colorRampPalette(c("white","royalblue"))
 Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia. Zbadamy wpływ na odczuwanie poszczególnych emocji czynników z pięciu grup: dotyczących snu, diety, aktywności fizycznej, kontaktów towarzyskich oraz używania urządzeń elektronicznych. Sprawdzimy, czy średnie samopoczucie różni się pomiędzy płciami oraz pomiędzy różnymi grupami wiekowymi.
 
 # Opis danych
+
+
 
 (Import, obróbka, wstępna analiza, testy na normalność)
 
@@ -82,9 +89,12 @@ Dodaliśmy także kolumnę z Ogólną oceną samopoczucia, w której zsumowaliś
 
 Te działania zostały wykonane w skrypcie `oczyszczanie_danych.R`, który załączymy do niniejszego raportu. Na koniec zapisaliśmy dane do pliku `dane.RData`.
 
-```{r}
+```{r wczytanie danych}
 load("dane.RData")
 ```
+
+
+
 
 # Hipotezy badawcze oraz ich weryfikacja
 
@@ -99,7 +109,7 @@ Hipotezy badane są na poziomie istotności $\alpha = 0.05$.
 
 Badanie, czy istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
 
-```{r}
+```{r hipoteza 1 testy}
 r1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
          method = "spearman")$p.value
 wsp_kor1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
@@ -113,7 +123,7 @@ wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokor
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
 
 ### Wykresy boxplot
-```{r}
+```{r hipoteza 1 boxplot}
 par(mfrow=c(1,2))
 boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "poziomy")
 boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
@@ -124,7 +134,7 @@ par(mfrow=c(1,1))
 ### Tabela kontygencji
 
 
-```{r}
+```{r hipoteza 1 tabelka}
 ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
  tabelka <- tabular((Upokorzenie = dane$upokorzenie)~  Format(digits =2)*(`Jakość snu` = dane$jakosc_snu)*Heading()*Percent("col"))
 
@@ -133,7 +143,7 @@ ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
 
 
 
-```{r results = 'asis'}
+```{r hipoteza 1 kable,  results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -144,7 +154,7 @@ ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
 ### Wykresy słupkowe
 
 
-```{r}
+```{r hipoteza 1 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 barplot(ttab,
         main = "Odczuwanie upokorzenia w zależności od jakości snu",
@@ -166,7 +176,7 @@ legend("topright",
 
 Badanie, czy istnieje zależność pomiędzy dietą a poczuciem radości.
 
-```{r}
+```{r hipoteza 2 testy}
 r3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "spearman")$p.value
 r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
@@ -176,7 +186,7 @@ r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
 P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
 
 ### Wykresy boxplot
-```{r}
+```{r hipoteza 2 boxplot}
 par(mfrow=c(1,2))
 boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
 boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
@@ -185,13 +195,13 @@ par(mfrow=c(1,1))
 
 ### Tabela kontygencji
 
-```{r}
+```{r hipoteza 2 tabelka}
 tabelka <- tabular((`Poczucie radości` = dane$radosc)~  Format(digits =2)*(`Jakość diety` = dane$dieta)*Heading()*Percent("col"))
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 2 kable, results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -201,7 +211,7 @@ tabelka <- tabular((`Poczucie radości` = dane$radosc)~  Format(digits =2)*(`Jak
 
 ### Wykresy słupkowe
 
-```{r}
+```{r hipoteza 2 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$radosc, dane$dieta), margin = 2)*100
 
@@ -223,7 +233,7 @@ legend("topright",
 
 Badanie, czy istnieje zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju.
 
-```{r}
+```{r hipoteza 3 testy}
 r5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                y = as.numeric(dane$niepokoj),
                method = "spearman")$p.value
@@ -236,13 +246,13 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r5)`, natomiast dla
 
 ### Tabela kontygencji
 
-```{r}
+```{r hipoteza 3 tabelka}
 tabelka <- tabular((`Niepokój` = dane$niepokoj)~  Format(digits =2)*(`Liczba bliskich znajomych` = dane$liczba_osob_kontakty)*Heading()*Percent("col"))
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 3 kable,  results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -252,7 +262,7 @@ tabelka <- tabular((`Niepokój` = dane$niepokoj)~  Format(digits =2)*(`Liczba bl
 
 ### Wykresy słupkowe
 
-```{r}
+```{r hipoteza 3 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$niepokoj, dane$liczba_osob_kontakty), margin = 2)*100
 
@@ -270,7 +280,7 @@ legend("topright",
        cex=0.9)
 ```
 
-```{r}
+```{r hipoteza 3 korelacje}
 wsp_kor5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                y = as.numeric(dane$niepokoj),
                method = "spearman")$estimate
@@ -285,7 +295,7 @@ Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą 
 
 Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń.
 
-```{r}
+```{r hipoteza 4 testy}
 r7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
                method = "spearman")$p.value
@@ -298,13 +308,13 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r7)`, natomiast dla
 
 ### Tabela kontygencji
 
-```{r}
+```{r hipoteza 4 tabelka}
 tabelka <- tabular((`Poczucie uzależnienia` = dane$poczucie_uzaleznienia_urzadzenia)~  Format(digits =2)*(`Godziny spędzone na używaniu urządzeń elektronicznych` = dane$godziny_rozrywki_urzadzenia)*Heading()*Percent("col"))
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 4 kable, results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -314,7 +324,7 @@ tabelka <- tabular((`Poczucie uzależnienia` = dane$poczucie_uzaleznienia_urzadz
 
 ### Wykresy słupkowe
 
-```{r}
+```{r hipoteza 4 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia), margin = 2)*100
 
@@ -332,7 +342,7 @@ legend("topright",
        cex=0.75)
 ```
 
-```{r}
+```{r hipoteza 4 korelacje}
 wsp_kor7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
                method = "spearman")$estimate
@@ -347,7 +357,7 @@ Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą 
 
 Badanie, czy istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
 
-```{r}
+```{r hipoteza 5 testy}
 r9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                y = as.numeric(dane$jakosc_snu),
                method = "spearman")$p.value
@@ -360,13 +370,13 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r9)`, natomiast dla
 
 ### Tabela kontygencji
 
-```{r}
+```{r hipoteza 5 tabelka}
 tabelka <- tabular((`Jakość snu` = dane$jakosc_snu)~  Format(digits =2)*(`Posiadanie wyznaczonych pór snu` = dane$wyzn_pory_snu)*Heading()*Percent("col"))
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 5 kable, results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -376,12 +386,12 @@ tabelka <- tabular((`Jakość snu` = dane$jakosc_snu)~  Format(digits =2)*(`Posi
 
 ### Wykresy słupkowe
 
-```{r}
+```{r hipoteza 5 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$jakosc_snu, dane$wyzn_pory_snu), margin = 2)*100
 
 barplot(ttab,
-        main = "Czy masz wyznaczone pory snu?",
+        main = "Zależność między jakością snu a posiadaniem jego wyznaczonych pór",
         ylab="Rozkład procentowy jakości snu",
         col = colf(5),
         names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"))
@@ -393,7 +403,7 @@ legend("topright",
        cex=0.8)
 ```
 
-```{r}
+```{r hipoteza 5 korelacje}
 wsp_kor9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                y = as.numeric(dane$jakosc_snu),
                method = "spearman")$estimate
@@ -408,7 +418,7 @@ Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` są doś�
 
 Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
 
-```{r}
+```{r hipoteza 6 testy}
 r11 <- cor.test(x = as.numeric(dane$godziny_sportu),
                y = as.numeric(dane$zalamanie),
                method = "spearman")$p.value
@@ -421,13 +431,13 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r11)`, natomiast dl
 
 ### Tabela kontygencji
 
-```{r}
+```{r hipoteza 6 tabelka}
 tabelka <- tabular((`Załamanie` = dane$zalamanie)~  Format(digits =2)*(`Liczba godzin przeznaczonych na sport` = dane$godziny_sportu)*Heading()*Percent("col"))
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 6 kable, results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -437,7 +447,7 @@ tabelka <- tabular((`Załamanie` = dane$zalamanie)~  Format(digits =2)*(`Liczba 
 
 ### Wykresy słupkowe
 
-```{r}
+```{r hipoteza 6}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$zalamanie, dane$godziny_sportu), margin = 2)*100
 
@@ -455,7 +465,7 @@ legend("topright",
        cex=0.8)
 ```
 
-```{r}
+```{r hipoteza 6 korelacje}
 wsp_kor11 <- cor.test(x = as.numeric(dane$godziny_sportu),
                y = as.numeric(dane$zalamanie),
                method = "spearman")$estimate
@@ -470,7 +480,7 @@ Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą 
 
 Badanie, czy istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
 
-```{r}
+```{r hipoteza 7 testy}
 r13 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                y = as.numeric(dane$dobry_humor),
                method = "spearman")$p.value
@@ -483,13 +493,13 @@ P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r13)`, natomiast dl
 
 ### Tabela kontygencji
 
-```{r}
+```{r hipoteza 7 tabelka}
 tabelka <- tabular((`Dobry humor` = dane$dobry_humor)~  Format(digits =2)*(`Jakość posiłków` = dane$jakosc_posilkow)*Heading()*Percent("col"))
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 7 kable, results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -499,12 +509,12 @@ tabelka <- tabular((`Dobry humor` = dane$dobry_humor)~  Format(digits =2)*(`Jako
 
 ### Wykresy słupkowe
 
-```{r}
+```{r hipoteza 7 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$dobry_humor, dane$jakosc_posilkow), margin = 2)*100
 
 barplot(ttab,
-        main = "Jak dużą uwagę przykładasz do jakości swoich posiłków?",
+        main = "Zależność pomiędzy jakością posiłków a dobrym humorem",
         ylab="Rozkład procentowy aktualnego humoru",
         col = colf(5),
         names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"))
@@ -516,7 +526,7 @@ legend("topright",
        cex=0.95)
 ```
 
-```{r}
+```{r hipoteza 7 korelacje}
 wsp_kor13 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                y = as.numeric(dane$dobry_humor),
                method = "spearman")$estimate
@@ -533,13 +543,13 @@ Badanie zależności między płcią a ogólną oceną samopoczucia.
 
 ### Średnia ocena samopoczucia w grupie kobiet i mężczyzn
 
-```{r}
+```{r hipoteza 8 średnie}
 tabelka <- tabular((`Ogólna ocena samopoczucia` = dane$ocena_samop_ogolna)~  Format(digits =2)*(`Płeć` = dane$plec)*Heading()*mean)
 
 
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 8 kable,  results = 'asis'}
 
 
  toKable(tabelka) %>%
@@ -549,14 +559,14 @@ tabelka <- tabular((`Ogólna ocena samopoczucia` = dane$ocena_samop_ogolna)~  Fo
 
 ### Wykres boxplot
 
-```{r}
+```{r hipoteza 8 boxplot}
 boxplot(dane$ocena_samop_ogolna~dane$plec)
 
 ```
 
 ### Badanie zależności
 
-```{r}
+```{r hipoteza 8 shapiro}
 shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
 
 ```
@@ -566,27 +576,27 @@ P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi `r spri
 
 
 
-```{r}
+```{r hipoteza 8 wilcox}
 pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
 ```
 
 
 P-value z testu Manna - Whitney'a - Wilcoxona wynosi `r sprintf("%.5f", pval)`. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
 
-```{r}
+```{r hipoteza 8 subsety}
 kobiety <- subset(dane, dane$plec == "kobieta")
 mezczyzni <- subset(dane, dane$plec == "mężczyzna")
 ```
 
 ### Badanie równości średnich
 
-```{r}
+```{r hipoteza 8 wariancje}
 pval <- var.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna)$p.value
 ```
 
 Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn (p-value `r sprintf("%.5f", pval)`), zatem stosujemy test T dla średnich.
 
-```{r}
+```{r hipoteza 8 test t}
 pval <- t.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna, var.equal = T, paired = F)$p.value
 ```
 
@@ -596,18 +606,18 @@ P-value z testu T wynosi `r sprintf("%.5f", pval)`, zatem odrzucamy hipotezę o 
 
 Badanie zależności między wiekiem a ogólną oceną samopoczucia.
 
-```{r}
+```{r hipoteza 9 model}
 mod <- lm(ocena_samop_ogolna~wiek, data = dane)
 ```
 
-```{r results = 'asis'}
+```{r hipoteza 9 stargazer, results = 'asis'}
 stargazer(mod, type = "latex", header=F)
 ```
 
 
 Istnieje istotna zależność pomiędzy ogólną oceną samopoczucia a wiekiem.
 
-```{r}
+```{r hipoteza 9 wykres}
 dane %>%
   ggplot(aes(x = wiek, y = ocena_samop_ogolna)) +
   geom_point() +
@@ -617,7 +627,7 @@ dane %>%
 
 Na niebiesko regresja nieparametryczna, na czerwono liniowa.
 
-```{r include = F}
+```{r hipoteza 9 testy na resztach, include = F}
 plot(mod)
 nortest::lillie.test(residuals(mod))
 shapiro.test(residuals(mod)) #nie ma normalności - zle
