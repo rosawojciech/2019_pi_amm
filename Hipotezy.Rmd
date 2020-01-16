@@ -40,7 +40,7 @@ colf <- colorRampPalette(c("white","royalblue"))
 
 # Wstęp
 
-Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia. Zbadamy wpływ na odczuwanie poszczególnych emocji cyznników z pięciu grup: dotyczących snu, diety, aktywności fizycznej, kontaktów towarzyskich oraz używania urządzeń elektronicznych. Sprawdzimy, czy średnie samopoczucie różni się pomiędzy płciami oraz pomiędzy różnymi grupami wiekowymi.
+Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia. Zbadamy wpływ na odczuwanie poszczególnych emocji czynników z pięciu grup: dotyczących snu, diety, aktywności fizycznej, kontaktów towarzyskich oraz używania urządzeń elektronicznych. Sprawdzimy, czy średnie samopoczucie różni się pomiędzy płciami oraz pomiędzy różnymi grupami wiekowymi.
 
 # Opis danych
 
@@ -48,7 +48,7 @@ Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na
 
 ## Zbieranie danych, opis badanej grupy
 
-Dane zebraliśmy na podstawie ankiety. Pytania dotyczące emocji pochodzą z artykułu "Skale do Pomiaru Nastroju i Sześciu Emocji" autorstwa Bogdana Wojciszke i Wiesława Baryły. Pozostałe pytania są naszego autorstwa. Ankietę stworzyliśmy przy pomocą Formularzy Google i rozesłaliśmy respondentom drogą internetową.
+Dane zebraliśmy na podstawie ankiety. Pytania dotyczące emocji pochodzą z artykułu "Skale do Pomiaru Nastroju i Sześciu Emocji" autorstwa Bogdana Wojciszke i Wiesława Baryły. Pozostałe pytania są naszego autorstwa. Ankietę stworzyliśmy za pomocą Formularzy Google i rozesłaliśmy respondentom drogą internetową.
 
 Przebadana przez nas grupa składała się z 240 osób. Spośród nich 48.3% było kobietami (a zatem 51.7% było mężczyznami, bo nie daliśmy do wyboru opcji typu "nie wiem, jakiej płci jestem"). Większość osób (trochę ponad połowa) było w wieku co najwyżej 23 lat (w tym aż 30% w wieku 21 lat).
 
