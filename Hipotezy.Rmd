@@ -93,7 +93,55 @@ Te działania zostały wykonane w skrypcie `oczyszczanie_danych.R`, który zał�
 load("dane.RData")
 ```
 
+```{r podsumowanie danych}
+mindane <- NULL
+maxdane <- NULL
+mediadane <- NULL
+normalnosc <- rep(0, ncol(dane)-1)
+shapiro <- NULL
+#zaczynamy od drugiej kolumny bo pierwsza to płeć
+for( i in 2:ncol(dane)){
+  mindane <- c(mindane,min(as.numeric(dane[, i]))) 
+  maxdane <- c(maxdane,max(as.numeric(dane[, i])))
+  mediadane <- c(mediadane,median(as.numeric(dane[, i])))
+  shapiro <- c(shapiro, shapiro.test(as.numeric(dane[, i]))$p.value)
+}
+for (i in 1:length(shapiro)){
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "TAK"} else if (shapiro[i]<=0.1) {
+    normalnosc[i] <- "decyzja niejednoznaczna" }else 
+      normalnosc [i] <- "NIE"
+}
+mindane <- c("Min", mindane)
+maxdane <- c("Max", maxdane)
+mediadane <- c("Mediana", mediadane)
+normalnosc <- c("Czy rozkład jest normalny", normalnosc)
 
+labelki <- c("Cecha", "wiek", "zly_humor", "swietnie",
+         "zly_nastroj", "roz_spok", "szaro_bezn","dobry_humor",
+         "pogodny", "przygnebiony", "zle_samop", "dobre_samop",
+         "radosc", "niepokoj", "strach", "milosc", "gniew",
+         "wesolosc", "upokorzenie", "smutek", "wzburzenie", 
+         "lek", "zal", "obawa", "zlosc", "zalamanie", 
+         "szczescie", "wscieklosc", "oddanie", "zadowolenie",
+         "czulosc", "wstyd", "pocz_winy", "przywiazanie", 
+         "depresja", "nieszczescie", "liczba_przespanych_godzin",
+         "wyzn_pory_snu", "jakosc_snu", "godziny_sportu",
+         "srodek_transportu", "kondycja_fizyczna", "godziny_pracy_urzadzenia",
+         "godziny_rozrywki_urzadzenia", "poczucie_uzaleznienia_urzadzenia",
+         "dieta", "jakosc_posilkow", "regularnosc_posilkow", 
+         "posiadanie_zaufanej_osoby", "liczba_osob_kontakty",
+         "znaczenie_kontaktow", "suma_samop1sr", "suma_samop2sr", "ocena_samop_ogolna")
+```
+
+```{r tabelka}
+tabela_cala <- cbind(labelki,mindane, mediadane, maxdane, normalnosc)
+tabela_cala <- as.tabular(tabela_cala)
+```
+
+```{r tabelka cała kable, results='asis'}
+toKable(tabela_cala) %>%
+   kable_styling(full_width = TRUE)
+```
 
 
 # Hipotezy badawcze oraz ich weryfikacja
