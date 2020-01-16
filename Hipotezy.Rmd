@@ -291,6 +291,15 @@ wsp_kor6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
 
 Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor5` oraz `r wsp_kor6`. Interpretując te współczynniki oraz dane z wykresów, można stwierdzić, że wraz ze wzrostem liczby osób, z którymi utrzymuje się regularny kontakt, spada częstość odczuwania niepokoju.
 
+
+```{r hipoteza 3 bubble chart}
+dane %>%
+  ggplot(aes(x = liczba_osob_kontakty, y = niepokoj, size = liczba_osob_kontakty, color = niepokoj))+
+  geom_point(alpha = 0.7)
+```
+
+Ten bubble chart jest na razie bez sensu, wrzucam tutaj żebyśmy mieli jak to zrobić.... Nie bardzo rozumiem jak to ma być kolorowane ani od czego wielkość ma zależeć (A.)
+
 ## Hipoteza IV
 
 Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń.
