@@ -114,7 +114,7 @@ dane <- dane[2:ncol(dane)] #pozbywamy się kolumny timestamp
     as.numeric(dane$przywiazanie)-as.numeric(dane$depresja)-as.numeric(dane$nieszczescie) #uczucia ze skalą 1-7
   suma_samop2sr <- suma_samop2/length(samopoczucie2)
   ocena_samop_ogolna <- suma_samop1+suma_samop2
-  dane <- cbind(dane, suma_samop1sr, suma_samop2sr, ocena_samop_ogolna)
+  dane <- cbind(dane, ocena_samop_ogolna)
 } #propozycja sumowania samopoczucia (pozytywne uczucia z plusem, negatywne z minusem)
 
 save(dane, file = "dane.RData")
