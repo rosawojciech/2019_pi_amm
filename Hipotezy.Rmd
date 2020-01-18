@@ -111,10 +111,7 @@ for (i in 1:length(shapiro)){
     normalnosc[i] <- "decyzja niejednoznaczna" }else 
       normalnosc [i] <- "NIE"
 }
-mindane <- c("Min", mindane)
-maxdane <- c("Max", maxdane)
-mediadane <- c("Mediana", mediadane)
-normalnosc <- c("Czy rozkład jest normalny", normalnosc)
+
 
 labelki <- c("Cecha", "wiek", "zly_humor", "swietnie",
          "zly_nastroj", "roz_spok", "szaro_bezn","dobry_humor",
@@ -135,12 +132,12 @@ labelki <- c("Cecha", "wiek", "zly_humor", "swietnie",
 
 ```{r tabelka}
 tabela_cala <- cbind(labelki,mindane, mediadane, maxdane, normalnosc)
-tabela_cala <- as.tabular(tabela_cala)
+#tabela_cala <- as.tabular(tabela_cala)
 ```
 
 ```{r tabelka cała kable, results='asis'}
-toKable(tabela_cala) %>%
-   kable_styling(full_width = TRUE)
+kable(tabela_cala, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
 
