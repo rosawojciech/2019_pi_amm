@@ -94,10 +94,13 @@ Te działania zostały wykonane w skrypcie `oczyszczanie_danych.R`, który zał�
 load("dane.RData")
 ```
 
+## Zbiorcza tabelka
+
 ```{r podsumowanie danych}
 mindane <- NULL
 maxdane <- NULL
 mediadane <- NULL
+srdane <- NULL
 normalnosc <- rep(0, ncol(dane)-1)
 shapiro <- NULL
 #zaczynamy od drugiej kolumny bo pierwsza to płeć
@@ -105,6 +108,7 @@ for( i in 2:ncol(dane)){
   mindane <- c(mindane,min(as.numeric(dane[, i]))) 
   maxdane <- c(maxdane,max(as.numeric(dane[, i])))
   mediadane <- c(mediadane,median(as.numeric(dane[, i])))
+  srdane <- c(srdane, round(mean(as.numeric(dane[,i])),2))
   shapiro <- c(shapiro, shapiro.test(as.numeric(dane[, i]))$p.value)
 }
 for (i in 1:length(shapiro)){
@@ -114,32 +118,54 @@ for (i in 1:length(shapiro)){
 }
 
 
-labelki <- c("Cecha", "wiek", "zly_humor", "swietnie",
-         "zly_nastroj", "roz_spok", "szaro_bezn","dobry_humor",
-         "pogodny", "przygnebiony", "zle_samop", "dobre_samop",
-         "radosc", "niepokoj", "strach", "milosc", "gniew",
-         "wesolosc", "upokorzenie", "smutek", "wzburzenie", 
-         "lek", "zal", "obawa", "zlosc", "zalamanie", 
-         "szczescie", "wscieklosc", "oddanie", "zadowolenie",
-         "czulosc", "wstyd", "pocz_winy", "przywiazanie", 
-         "depresja", "nieszczescie", "liczba_przespanych_godzin",
-         "wyzn_pory_snu", "jakosc_snu", "godziny_sportu",
-         "srodek_transportu", "kondycja_fizyczna", "godziny_pracy_urzadzenia",
-         "godziny_rozrywki_urzadzenia", "poczucie_uzaleznienia_urzadzenia",
-         "dieta", "jakosc_posilkow", "regularnosc_posilkow", 
-         "posiadanie_zaufanej_osoby", "liczba_osob_kontakty",
-         "znaczenie_kontaktow", "suma_samop1sr", "suma_samop2sr", "ocena_samop_ogolna")
+labelki <- c( "Wiek", "Jestem w złym humorze", "Czuję się świetnie",
+         "Jestem w złym nastroju", "Czuję się rozluźniony i spokojny", 
+         "Czuję się szaro i beznadziejnie",
+         "Jestem w dobrym humorze",
+         "Jestem pogodny", "Czuję się przygnębiony", 
+         "Moje samopoczucie jest złe", 
+         "Moje samopoczucie jest dobre",
+         "Radość", "Niepokój", "Strach", "Miłość", "Gniew",
+         "Wesołość", "Upokorzenie", "Smutek", "Wzburzenie", 
+         "Lęk", "Żal", "Obawa", "Złość", "Załamanie", 
+         "Szczęście", "Wściekłość", "Oddanie", "Zadowolenie",
+         "Czułość", "Wstyd", "Poczucie winy", "Przywiązanie", 
+         "Depresja", "Nieszczęście", 
+         "Liczba godzin przespanych w ciągu doby",
+         "Posiadanie wyznaczonych pór snu", 
+         "Jakość snu", 
+         "Godziny poświęcane tygodniowo na sport",
+         "Najczęściej wybierany środek transportu", 
+         "Ocena kondycji fizycznej", 
+         "Godziny spędzone dziennie na pracy na urządzeniach elektronicznych",
+         "Godziny spędzone dziennie na rozrywce na urządzeniach elektronicznych",
+         "Poczucie uzależnienia od urządzeń elektronicznych",
+         "Przeważający składnik w diecie", 
+         "Dbanie o jakość posiłków", 
+         "Regularność posiłków", 
+         "Posiadanie zaufanej osoby", 
+         "Liczba osób, z którymi utrzymuje się bliski konatkt",
+         "Jakie znaczenie mają dla Ciebie kontakty z innymi ludźmi?",  
+         "Ogólna ocena samopoczucia")
 ```
 
 ```{r tabelka}
-tabela_cala <- cbind(labelki,mindane, mediadane, maxdane, normalnosc)
+tabela_cala <- cbind(labelki,mindane, mediadane,srdane, maxdane, normalnosc)
 #tabela_cala <- as.tabular(tabela_cala)
+tabela_cala1 <- tabela_cala[1:35,]
+tabela_cala2 <- tabela_cala[36:51,]
 ```
 
-```{r tabelka cała kable, results='asis'}
-kable(tabela_cala, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana", "Maksimum", "Czy rozkład jest normalny?")) %>%
+```{r tabelka cała 1 kable, results='asis'}
+kable(tabela_cala1, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
+
+```{r tabelka cała 2 kable, results='asis'}
+kable(tabela_cala2, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
 
 
 # Hipotezy badawcze oraz ich weryfikacja
