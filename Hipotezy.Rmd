@@ -112,9 +112,9 @@ for( i in 2:ncol(dane)){
   shapiro <- c(shapiro, shapiro.test(as.numeric(dane[, i]))$p.value)
 }
 for (i in 1:length(shapiro)){
-  if(shapiro[i] <=0.05) {normalnosc[i] <- "TAK"} else if (shapiro[i]<=0.1) {
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "NIE"} else if (shapiro[i]<=0.1) {
     normalnosc[i] <- "decyzja niejednoznaczna" }else 
-      normalnosc [i] <- "NIE"
+      normalnosc [i] <- "TAK"
 }
 
 
@@ -152,21 +152,92 @@ labelki <- c( "Wiek", "Jestem w złym humorze", "Czuję się świetnie",
 ```{r tabelka}
 tabela_cala <- cbind(labelki,mindane, mediadane,srdane, maxdane, normalnosc)
 #tabela_cala <- as.tabular(tabela_cala)
-tabela_cala1 <- tabela_cala[1:35,]
-tabela_cala2 <- tabela_cala[36:51,]
+tabela_cala1 <- tabela_cala[1,]
+tabela_cala2 <- tabela_cala[2:11,]
+tabela_cala3 <- tabela_cala[12:35,]
+tabela_cala4 <- tabela_cala[36:38,]
+tabela_cala5 <- tabela_cala[39:41,]
+tabela_cala6 <- tabela_cala[42:44,]
+tabela_cala7 <- tabela_cala[45:47,]
+tabela_cala8 <- tabela_cala[48:51,]
 ```
 
 ```{r tabelka cała 1 kable, results='asis'}
-kable(tabela_cala1, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+#kable(tabela_cala1, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+#   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
+
+Pytania dotyczące aktualnego nastroju były oceniane 5-cio stopniową skalą. Wartości 1-5 oznaczały odpowiednio: "1 - nie zgadzam się", "2 - raczej się nie zgadzam", "3 - trochę tak, trochę nie", "4 - raczej się zgadzam", "5 - zgadzam się".
 
 ```{r tabelka cała 2 kable, results='asis'}
 kable(tabela_cala2, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
+Przy ocenie częstości odczuwania poszczególnych emocji, do wyboru były odpowiedzi oceniane w skali 7-mio stopniowej. Oznaczały odpowiednio: "1 - nigdy", "2 - bardzo rzadko", "3 - rzadko", "4 - czasami", "5 - często", "6 - bardzo często", "7 - zawsze".
 
+```{r tabelka cała 3 kable, results='asis'}
+kable(tabela_cala3, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące snu oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- średniej liczby przesypianych godzin oznaczały: "1 - mniej niż 4", "2 - 4-6h", "3 - 6-8h", "4 - 8-10h", "5 - więcej niż 10h";
+- posiadania wyznaczonych pór snu określały: "1 - posiadanie regularnych pór snu" do "5 - posiadanie nieregularnych pór snu";
+- oceny jakości snu określały: "1 - bardzo zła jakość" do "5 - bardzo dobra jakość".
+
+```{r tabelka cała 4 kable, results='asis'}
+kable(tabela_cala4, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące sportu oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- liczby godzin poświęconych tygodniowo na sport oznaczały: "1 - nie uprawiam żadnego sportu", "2 - mniej niż 1h", "3 - 1-2,5h", "4 - 2,5-4h", "5 - więcej niż 4h";
+- najczęściej wybieranego środka transportu oznaczały: "1 - samochód", "2 - komunikacja miejska", "3 - rower", "4 - chodzenie pieszo", "5 - inny";
+- oceny własnej kondyncji fizycznej określały: "1 - bardzo zła" do "5 - bardzo dobra".
+
+```{r tabelka cała 5 kable, results='asis'}
+kable(tabela_cala5, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące korzystania z urządzeń elektronicznych oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- średniej liczby godzin poświęcanej w ciągu dnia na korzystanie z u.e. w celu pracy bądź nauki oznaczały: "1 - nie używam/rzadko używam komputera do pracy/nauki", "2 - mniej niż 3", "3 - 3-5h", "4 - 5-8h", "5 - powyżej 5h";
+- średniej liczby godzin poświęconej w ciągu dnia na korzystanie z u.e w celach rozrywkowych oznaczały:
+"1 - mniej niż 1h", "2 - 1-2h", "3 - 2-3h", "4 - 3-4h", "5 - więcej niż 4h";
+- częstości występowania poczucia uzależnienia od u.e. oznaczały: "1 - nigdy", "2 - rzadko", "3 - czasami", "4 - często", "5 - bardzo często".
+
+```{r tabelka cała 6 kable, results='asis'}
+kable(tabela_cala6, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące diety oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- przeważającego składnika diety oznaczały: "1 - fast food", "2 - żywność mocno przetworzona (mrożonki, gotowe dania)", "3 - mięso i ciężkostrawne potrawy", "4 - warzywa i owoce", "5 - mam zbilansowaną dietę";
+- wagi przywiązywanej do jakości spożywanych posiłków oznaczały: "1 - wszystko mi jedno", "2 - nie jest to moim priorytetem", "3 - staram się jeść zdrowo, ale mi nie wychodzi", "4 - jest to dla mnie dość ważne", "5 - jestem tym, co jem!";
+- regularności spożywanych posiłków oznaczały: "1 - jem nieregularnie", "2 - różnie z tym bywa", "3 - staram się jeść regularnie", "4 - zazwyczaj jem regularnie", "5 - mam stałe pory posiłków".
+
+```{r tabelka cała 7 kable, results='asis'}
+kable(tabela_cala7, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące kontaktów towarzyskich oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- posiadania osoby, na której można polegać w trudnej sytuacji oznaczały: "1 - nie mam nikogo takiego", "2 - z rodziną/znajomymi nie poruszam poważnych tematów", "3 - nie czuję się komfortowo rozmawiając na trudne tematy z rodziną/znajomymi", "4 - na ogół mam do kogo zwrócić się z problemem", "5 - mam osoby, z którymi mogę porozmawiać o wszystkim";
+- liczby osób, z którymi utrzymuje się stały kontakt oznaczały: "1 - brak takiej osoby", "2 - jedną osobę", "3 - 2-3 osoby", "4 - 4-5 osób", "5 - 5 i więcej osób";
+- znaczenia, jakie mają dla ankietowanego kontakty z innymi ludźmi oznaczały "1 - brak znaczenia" do "5 - bardzo duże znaczenie".
+
+```{r tabelka cała 8 kable, results='asis'}
+kable(tabela_cala8, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Ogólna ocena samopoczucia została uzyskana poprzez zsumowanie wartości uczuć pozytywnych ze znakiem dodatnim oraz negatywnych z ujemnym. 
 
 # Hipotezy badawcze oraz ich weryfikacja
 
@@ -192,7 +263,7 @@ wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokor
          method = "kendall")$estimate
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
 
 ### Wykresy boxplot
 ```{r hipoteza 1 boxplot}
@@ -226,6 +297,7 @@ ttab_round <- round(ttab,2)
 
 ### Wykresy słupkowe
 
+Poniżej przedstawiony wykres zawieraj wartości procentowe, nie liczebności dla poszczególnych odpowiedzi; podobnie jak w przypadku wykresów tego typu przedstawionych dla kolejnych hipotez.
 
 ```{r hipoteza 1 barplot}
 par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
@@ -257,7 +329,7 @@ r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
 
 ### Wykresy boxplot
 ```{r hipoteza 2 boxplot}
@@ -318,7 +390,7 @@ r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r5)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r6)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r5)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r6)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
 
 ### Tabela kontygencji
 
@@ -391,7 +463,7 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r7)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r8)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
 
 ### Tabela kontygencji
 
@@ -454,7 +526,7 @@ r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r9)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r10)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
 
 ### Tabela kontygencji
 
@@ -516,7 +588,7 @@ r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r11)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r11)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
 
 ### Tabela kontygencji
 
@@ -579,7 +651,7 @@ r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.10f", r13)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.10f", r14)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r13)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r14)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
 
 ### Tabela kontygencji
 
@@ -662,7 +734,7 @@ shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
 
 ```
 
-P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi `r sprintf("%.5f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
+P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
 
 
 
@@ -672,7 +744,7 @@ pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
 ```
 
 
-P-value z testu Manna - Whitney'a - Wilcoxona wynosi `r sprintf("%.5f", pval)`. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+P-value z testu Manna - Whitney'a - Wilcoxona wynosi `r sprintf("%.3f", pval)`. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
 
 ```{r hipoteza 8 subsety}
 kobiety <- subset(dane, dane$plec == "kobieta")
@@ -685,13 +757,13 @@ mezczyzni <- subset(dane, dane$plec == "mężczyzna")
 pval <- var.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna)$p.value
 ```
 
-Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn (p-value `r sprintf("%.5f", pval)`), zatem stosujemy test T dla średnich.
+Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn (p-value `r sprintf("%.3f", pval)`), zatem stosujemy test T dla średnich.
 
 ```{r hipoteza 8 test t}
 pval <- t.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna, var.equal = T, paired = F)$p.value
 ```
 
-P-value z testu T wynosi `r sprintf("%.5f", pval)`, zatem odrzucamy hipotezę o równości średnich. Średnia ogólna ocena samopoczucia różni się istotnie w grupach kobiet i mężczyzn.
+P-value z testu T wynosi `r sprintf("%.3f", pval)`, zatem odrzucamy hipotezę o równości średnich. Średnia ogólna ocena samopoczucia różni się istotnie w grupach kobiet i mężczyzn.
 
 ## Hipoteza IX
 
