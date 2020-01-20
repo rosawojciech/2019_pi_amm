@@ -19,7 +19,8 @@ bibliography: bibliografia.bib
 ```{r setup, include=FALSE, results='asis'}
 knitr::opts_chunk$set(echo = F,
                       message = F,
-                      warning = F)
+                      warning = F,
+                      dev = "cairo_pdf")
 ```
 
 ```{r biblioteki}
