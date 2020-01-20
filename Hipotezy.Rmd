@@ -263,7 +263,7 @@ wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokor
          method = "kendall")$estimate
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r1)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r1)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
 
 ### Wykresy boxplot
 ```{r hipoteza 1 boxplot}
@@ -329,7 +329,7 @@ r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r3)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r3)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
 
 ### Wykresy boxplot
 ```{r hipoteza 2 boxplot}
@@ -390,7 +390,7 @@ r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r5)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r6)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+P-value dla obu testów wynosi około $p =$ `r sprintf("%.3f", r5)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
 
 ### Tabela kontygencji
 
@@ -463,7 +463,7 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                method = "kendall")$p.value
 ```
 
-P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+P-value dla obu testów są nieistotnie różne od zera ($p < 0.001***$). Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
 
 ### Tabela kontygencji
 
@@ -488,7 +488,7 @@ par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia), margin = 2)*100
 ttab_round <- round(ttab,2)
 bar <- barplot(ttab,
-        main = "Wykres zależności",
+        main = "Zależność pomiędzy czasem spędzonym na komputerze \n dla rozrywki a poczuciem uzależnienia",
         xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
         ylab="Procentowy rozkład poczucia uzależnienia od urządzeń",
         col=colf(7),
@@ -526,7 +526,7 @@ r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                method = "kendall")$p.value
 ```
 
-P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+P-value dla obu testów są nieistotnie różne od zera ($p < 0.001***$). Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
 
 ### Tabela kontygencji
 
@@ -551,7 +551,7 @@ par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$jakosc_snu, dane$wyzn_pory_snu), margin = 2)*100
 ttab_round <- round(ttab,2)
 bar <- barplot(ttab,
-        main = "Zależność między jakością snu a posiadaniem jego wyznaczonych pór",
+        main = "Zależność pomiędzy jakością snu \n a posiadaniem jego wyznaczonych pór",
         ylab="Rozkład procentowy jakości snu",
         col = colf(5),
         names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"))
@@ -588,7 +588,7 @@ r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r11)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+P-value dla testu $p =$ `rho-Spearmana` wynosi `r sprintf("%.3f", r11)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
 
 ### Tabela kontygencji
 
@@ -613,7 +613,7 @@ par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
 ttab <- prop.table(table(dane$zalamanie, dane$godziny_sportu), margin = 2)*100
 ttab_round <- round(ttab,2)
 bar <- barplot(ttab,
-        main = "Wykres zależności",
+        main = "Zależność pomiędzy godzinami poświęconymi na sport \n a poczuciem załamania",
         xlab="Liczba godzin w tygodniu przeznaczonych na sport",
         ylab="Rozkład procentowy poczucia załamania",
         col = colf(7),
@@ -651,7 +651,7 @@ r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r13)`, natomiast dla testu `tau-Kendalla` wynosi `r sprintf("%.3f", r14)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r13)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r14)`$**$. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
 
 ### Tabela kontygencji
 
@@ -734,7 +734,7 @@ shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
 
 ```
 
-P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
+P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi $p =$ `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
 
 
 
@@ -744,7 +744,7 @@ pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
 ```
 
 
-P-value z testu Manna - Whitney'a - Wilcoxona wynosi `r sprintf("%.3f", pval)`. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+P-value z testu Manna - Whitney'a - Wilcoxona wynosi $p =$ `r sprintf("%.3f", pval)` $**$. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
 
 ```{r hipoteza 8 subsety}
 kobiety <- subset(dane, dane$plec == "kobieta")
@@ -757,7 +757,7 @@ mezczyzni <- subset(dane, dane$plec == "mężczyzna")
 pval <- var.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna)$p.value
 ```
 
-Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn (p-value `r sprintf("%.3f", pval)`), zatem stosujemy test T dla średnich.
+Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn ($p =$ `r sprintf("%.3f", pval)`), zatem stosujemy test T dla średnich.
 
 ```{r hipoteza 8 test t}
 pval <- t.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna, var.equal = T, paired = F)$p.value
