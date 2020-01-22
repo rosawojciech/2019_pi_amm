@@ -787,7 +787,7 @@ Zbadamy, czy średnie ogólnej oceny samopoczucia różnią się w trzech grupac
 
 - 25 i więcej lat
 
-```{r}
+```{r hipoteza 10 utworzenie kategorii wiekowych}
 dane$wiek_kat<- factor(findInterval(dane$wiek,c(21,25)),levels = 0:2, labels = c("<21","21-24",">=25"),ordered = T)
 wiek_kat <- factor(findInterval(dane$wiek,c(21,25)),levels = 0:2, labels = c("<21","21-24",">=25"),ordered = T)
 tabelka <- table(wiek_kat)
@@ -797,19 +797,19 @@ colnames(tabelka) <- c("Grupa wiekowa", "Liczebność")
 
 Poszczególne grupy wiekowe mają następującą liczebność:
 
-```{r}
+```{r hipoteza 10 wiek tabelki}
 kable(tabelka) %>%
-  kable_styling()
+  kable_styling(full_width = F)
 ```
 
 
 
-```{r}
+```{r hipoteza 10 boxplot}
 dane %>%
   ggboxplot(x = "wiek_kat", y = "ocena_samop_ogolna", fill = "wiek_kat")
 ```
 
-```{r}
+```{r hipoteza 10 anova}
 mod <- aov(ocena_samop_ogolna~wiek_kat, data = dane)
 summary(mod)
 ```
@@ -818,6 +818,66 @@ summary(mod)
 Z wykresu boxplot można przypuszczać, że raczej nie ma bardzo istotnych różnic pomiędzy grupami.
 
 Z testu ANOVA otrzymujemy p-value około 0.246, zatem grupa wiekowa nie różnicuje istotnie oceny ogólnej samopoczucia.
+
+# Dane zsumowane
+
+```{r sumowanie danych}
+sen <- cbind(dane$jakosc_snu, dane$liczba_przespanych_godzin, dane$wyzn_pory_snu)
+dieta <- cbind(dane$jakosc_posilkow, dane$dieta, dane$regularnosc_posilkow)
+aktywnosc <- cbind(dane$kondycja_fizyczna, dane$srodek_transportu, dane$godziny_sportu)
+urzadzenia <- cbind(dane$godziny_pracy_urzadzenia, dane$godziny_rozrywki_urzadzenia, dane$poczucie_uzaleznienia_urzadzenia)
+kontakty <- cbind(dane$liczba_osob_kontakty, dane$znaczenie_kontaktow, dane$posiadanie_zaufanej_osoby)
+dane_sum <- cbind( dane$plec,dane$wiek, rowSums(sen), rowSums(dieta), rowSums(aktywnosc), rowSums(urzadzenia), rowSums(kontakty), dane$ocena_samop_ogolna)
+dane_sum <- as.data.frame(dane_sum)
+colnames(dane_sum) <- c("plec", "wiek", "sen", "dieta", "aktywnosc", "urzadzenia", "kontakty", "samopoczucie")
+```
+
+Wcześniej pracowaliśmy osobno na odpowiedziach z ankiety. Teraz będziemy pracować na danych, w których odpowiedzi z danych kategorii zostały zsumowane, tj. zmienne sen, dieta, aktywność, urządzenia i kontakty są sumą trzech odpowiednich zmiennych wymienionych wcześniej:
+
+- na ocenę snu składa się ocena jego jakości, posiadania wyznaczonych pór snu oraz liczby przespanych godzin
+
+- na ocenę diety składa się ocena jakości posiłków, przeważający składnik diety oraz regularność posiłków
+
+- na ocenę aktywności fizycznej składa się ocena kondycji, liczba godzin poświęcanych tygodniowo na sport oraz preferowany środek transportu
+
+- na ocenę czasu spędzanego z urządzeniami elektronicznymi składa się dzienna liczba godzin spędzana na pracy z urządzeniami, dzienna liczba godzin poświęcana na rozrywkę przy użyciu urządzeń oraz poczucie uzależnienia od urządzeń
+
+- na ocenę kontaktów towarzyskich składa się ocena ważności kontaktów międzyludzkich dla danej osoby, posiadanie zaufanej osoby oraz liczba osób, z którymi utrzymuje się regularny kontakt
+
+Wcześniej poszczególne czynniki były ocenione w skali od 1 do 5, więc teraz skala wynosi od 1 do 15.
+
+Oprócz tego do nowego zbioru danych włączamy zmienne płeć, wiek oraz ogólna ocena samopoczucia.
+
+```{r}
+mindane <- NULL
+maxdane <- NULL
+mediadane <- NULL
+srdane <- NULL
+normalnosc <- rep(0, ncol(dane_sum)-1)
+shapiro <- NULL
+#zaczynamy od drugiej kolumny bo pierwsza to płeć
+for( i in 2:ncol(dane_sum)){
+  mindane <- c(mindane,min(as.numeric(dane_sum[, i]))) 
+  maxdane <- c(maxdane,max(as.numeric(dane_sum[, i])))
+  mediadane <- c(mediadane,median(as.numeric(dane_sum[, i])))
+  srdane <- c(srdane, round(mean(as.numeric(dane_sum[,i])),2))
+  shapiro <- c(shapiro, shapiro.test(as.numeric(dane_sum[, i]))$p.value)
+}
+for (i in 1:length(shapiro)){
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "NIE"} else if (shapiro[i]<=0.1) {
+    normalnosc[i] <- "decyzja niejednoznaczna" }else 
+      normalnosc [i] <- "TAK"
+}
+labelki <- c("Wiek", "Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty", "Samopoczucie")
+tabela_cala <- cbind( labelki, mindane, mediadane,srdane, maxdane, normalnosc)
+tabela_cala <- as.data.frame(tabela_cala)
+colnames(tabela_cala) <- c("Cecha", "Min", "Mediana", "Średnia", "Max", "Czy rozkład jest normalny?")
+```
+
+```{r}
+kable(tabela_cala)%>%
+  kable_styling(full_width = T, latex_options = c("scale_down"))
+```
 
 # Wnioski
 
