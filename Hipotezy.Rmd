@@ -848,7 +848,7 @@ Wcześniej poszczególne czynniki były ocenione w skali od 1 do 5, więc teraz 
 
 Oprócz tego do nowego zbioru danych włączamy zmienne płeć, wiek oraz ogólna ocena samopoczucia.
 
-```{r}
+```{r sumowanie danych tabelka}
 mindane <- NULL
 maxdane <- NULL
 mediadane <- NULL
@@ -874,10 +874,94 @@ tabela_cala <- as.data.frame(tabela_cala)
 colnames(tabela_cala) <- c("Cecha", "Min", "Mediana", "Średnia", "Max", "Czy rozkład jest normalny?")
 ```
 
-```{r}
+```{r sumowanie danych kable, results = 'asis'}
 kable(tabela_cala)%>%
   kable_styling(full_width = T, latex_options = c("scale_down"))
 ```
+
+
+```{r sumowanie danych boxplot}
+boxplot(dane_sum$sen, dane_sum$dieta, dane_sum$aktywnosc, dane_sum$urzadzenia, dane_sum$kontakty,
+        names = c("Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty"),col = "pink")
+```
+Z wykresu boxplot widać, że najlepsze oceny pojawiały się w kategorii Kontakty. W przypadku pozostałych czynników, oceny są na podobnym poziomie, z medianami pomiędzy 8 a 10.
+
+
+## Sen a samopoczucie
+
+```{r sen a samopoczucie testy}
+r1 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor1 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r2 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor2 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+Z testów Kendalla oraz Spearmana otrzymujemy p-value praktycznie równe zero. Oznacza to, że zależność pomiędzy snem a samopoczuciem jest istotna statystycznie. Współczynniki korelacji wynoszą 0.261 dla Spearmana i 0.191 dla Kendalla. Oznacza to, że im lepiej śpimy, tym lepsze samopoczucie mamy :)
+
+## Dieta a samopoczucie
+
+```{r dieta a samopoczucie testy}
+r3 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor3 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r4 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor4 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+Z testów Spearmana oraz Kendalla otrzymujemy p-value praktycznie równe zero. Istnieje zależność pomiędzy dietą a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.322 dla Spearmana oraz 0.232 dla Kendalla. Im lepsza jakość naszej diety, tym lepsze  nasze samopoczucie :)
+
+## Aktywność a samopoczucie
+
+
+```{r aktywność a samopoczucie testy}
+r5 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor5 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r6 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor6 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+Z testów Spearmana oraz Kendalla otrzymujemy p-value około 0.01, co pozwala odrzucić hipotezę zerową o braku zależności. Współczynniki korelacji wynoszą odpowiednio 0.163 dla Spearmana i 0.116 dla Kendalla. Im więcej mamy aktywności, tym lepsze nasze samopoczucie :)
+
+## Urządzenia a samopoczucie
+
+```{r urządzenia a samopoczucie testy}
+r7 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor7 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r8 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor8 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+P-value z testów Spearmana oraz Kendalla wynoszą około 0.01, a więc odrzucamy hipotezę o braku zależności. Współczynniki korelacji wynoszą odpowiednio -0.162 dla Spearmana oraz -0.115 dla Kendalla. Im więcej korzystamy z urządzeń elektronicznych, tym gorsze nasze samopoczucie :( Moje na przykład pogorszyło się podczas robienia tego projektu.
+
+## Kontakty a samopoczucie
+
+```{r kontakty a samopoczucie}
+r9 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor9 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+P-value z obu testów są praktycznie równe zero. Istnieje zależność pomiędzy kontaktami towarzyskimi a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.455 dla Spearmana i 0.329 dla Kendalla.
+Im lepsze nasze kontakty towarzyskie, tym lepsze nasze samopoczucie :)
 
 # Wnioski
 
