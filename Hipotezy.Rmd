@@ -974,6 +974,15 @@ Może uznajmy, że wszystkie zmienne są istotne statystycznie, chociaż sen jes
 
 Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
 
+## Taki tam bubble chart
+
+```{r sumowanie danych bubble chart}
+bubble <- dane_sum %>%
+  ggplot(aes(x = kontakty, y = samopoczucie, size = urzadzenia, color = aktywnosc))+
+  geom_point()
+bubble
+```
+
 # Wnioski
 
 Wykazaliśmy następujące związki:
