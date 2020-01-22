@@ -963,6 +963,16 @@ wsp_kor10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum
 P-value z obu testów są praktycznie równe zero. Istnieje zależność pomiędzy kontaktami towarzyskimi a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.455 dla Spearmana i 0.329 dla Kendalla.
 Im lepsze nasze kontakty towarzyskie, tym lepsze nasze samopoczucie :)
 
+## Modelik
+
+```{r mały modelik liniowy}
+mod <- lm(samopoczucie~sen+dieta+aktywnosc+urzadzenia+kontakty, data = dane_sum)
+summary(mod)
+```
+Może uznajmy, że wszystkie zmienne są istotne statystycznie, chociaż sen jest na granicy.
+
+Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
+
 # Wnioski
 
 Wykazaliśmy następujące związki:
