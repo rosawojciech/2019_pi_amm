@@ -1,0 +1,1011 @@
+---
+title: "Badanie statystyczne wpływu różnych czynników na poziom samopoczucia"
+author: "Marcin Dziadosz, Alicja Hołowiecka, Matylda Jankowska"
+editor_options:
+  chunk_output_type: console
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '2'
+lang: pl
+bibliography: bibliografia.bib
+---
+
+```{r setup, include=FALSE, results='asis'}
+knitr::opts_chunk$set(echo = F,
+                      message = F,
+                      warning = F,
+                      dev = "cairo_pdf")
+```
+
+```{r biblioteki}
+library(alr3)
+library(kableExtra)
+library(magrittr)
+library(plyr)
+library(tidyverse)
+library(lmtest)
+library(ggplot2)
+library(ggcorrplot)
+library(ggpubr)
+library(stargazer)
+library(tables)
+library(Hmisc)
+library(tinytex)
+library(plotly)
+library(plotrix)
+
+colf <- colorRampPalette(c("white","royalblue"))
+```
+
+
+\newpage 
+
+# Wstęp
+
+Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na poziom samopoczucia. Zbadamy wpływ na odczuwanie poszczególnych emocji czynników z pięciu grup: dotyczących snu, diety, aktywności fizycznej, kontaktów towarzyskich oraz używania urządzeń elektronicznych. Sprawdzimy, czy średnie samopoczucie różni się pomiędzy płciami oraz pomiędzy różnymi grupami wiekowymi.
+
+# Opis danych
+
+## Zbieranie danych, opis badanej grupy
+
+Dane zebraliśmy na podstawie ankiety. Pytania dotyczące emocji pochodzą z artykułu "Skale do Pomiaru Nastroju i Sześciu Emocji" autorstwa Bogdana Wojciszke i Wiesława Baryły. Pozostałe pytania są naszego autorstwa. Ankietę stworzyliśmy za pomocą Formularzy Google i rozesłaliśmy respondentom drogą internetową.
+
+Przebadana przez nas grupa składała się z 240 osób. Spośród nich 48.3% było kobietami (a zatem 51.7% było mężczyznami, bo nie daliśmy do wyboru opcji typu "nie wiem, jakiej płci jestem"). Większość osób (trochę ponad połowa) było w wieku co najwyżej 23 lat (w tym aż 30% w wieku 21 lat).
+
+Pierwsze 10 pytań były to zdania dotyczące aktualnego samopoczucia. Należało ocenić w skali od 1 do 5, jak bardzo zgadzasz się z danym twierdzeniem. Po nich następowały 24 uczucia takie jak radość, złość, depresja itp. Należało ocenić w skali od 1 do 7 (od "nigdy" do "zawsze") jak często odczuwasz daną emocję.
+
+Potem pojawiały się pytania o czynniki, których wpływ na samopoczucie chcemy zbadać. Każdego z pięciu poniższych czynników dotyczyły trzy pytania:
+
+- sen: liczba godzin przespanych w ciągu doby (do wyboru z 5 odpowiedzi), posiadanie wyznaczonych godzin snu (ocena w skali od 1 do 5), jakość snu (ocena w skali od 1 do 5)
+
+- aktywność fizyczna: ilość godzin poświęcana tygodniowo na sport (do wyboru z 5 odpowiedzi), najczęściej wybierany środek transportu (do wyboru z 5 odpowiedzi, w tym możliwość podania własnej odpowiedzi przy opcji "inne"), kondycja fizyczna (ocena w skali od 1 do 5)
+
+- używanie urządzeń elektronicznych: ilość godzin spędzana w ciągu dnia na korzystaniu z urządzeń elektronicznych w celu pracy/nauki (do wyboru z 5 odpowiedzi), ilość godzin spędzana w ciągu dnia na korzystaniu z urządzeń elektronicznych w celu rozrywki (do wyboru z 5 odpowiedzi), poczucie uzależnienia od urządzeń elektronicznych (ocena w skali od 1 do 5)
+
+- dieta: przeważający składnik w diecie (do wyboru z 5 odpowiedzi), znaczenie jakości posiłków (do wyboru z 5 odpowiedzi), regularność posiłków (do wyboru z 5 odpowiedzi)
+
+- kontakty towarzyskie: posiadanie bliskich osób, na których można polegać (do wyboru z 5 odpowiedzi), liczba bliższych znajomych (do wyboru z 5 odpowiedzi), znaczenie kontaktów z innymi ludźmi (ocena w skali od 1 do 5)
+
+Jak widać, wszystkie te czynniki były oceniane w skali od 1 do 5, a czynniki dotyczące samopoczucia bądź w skali od 1 do 7, bądź w skali od 1 do 5. Zbadamy zarówno zależności pomiędzy pojedynczymi czynnikami, jak również pomiędzy zsumowanymi, na przykład Ogólna ocena samopoczucia.
+
+## Import i oczyszczanie danych
+
+Do R zaimportowaliśmy dane z pliku `.xlsx`. Przy tworzeniu ankiety zastrzegliśmy, że na każde pytanie trzeba odpowiedzieć, dlatego nie mieliśmy problemu z brakami danych. W kolumnie `wiek` mieliśmy kilka nieprawidłowo wprowadzonych danych, większość osób podawała wiek jako liczbę, ale niektórzy pisali np. "21 lat". Poprawiliśmy to i zmieniliśmy typ kolumny na numeryczny. Musieliśmy też poprawić kilka odpowiedzi na pytanie o jakość posiłków, ponieważ zmieniliśmy jedną z możliwych odpowiedzi w ankiecie już po rozpoczęciu zbierania danych.
+
+Wszystkim kolumnom zmieniliśmy nazwy, tak aby pozbyć się polskich znaków i odstępów, oraz żeby ułatwić sobie pracę z danymi.
+
+Typ danych w kolumnach, w których możliwych było 5 odpowiedzi na pytanie, zmieniliśmy na `factor`, i uszeregowaliśmy od odpowiedzi, która według nas w danym pytaniu była najgorsza, do najlepszej.
+
+W pytaniach, gdzie należało oceniać czynnik w skali od 1 do 5 lub od 1 do 7, także zmieniliśmy typ na `factor`.
+
+Dodaliśmy także kolumnę z Ogólną oceną samopoczucia, w której zsumowaliśmy odpowiedzi z pytań o emocje - pozytywne uczucia sumowaliśmy z plusem, a negatywne z minusem.
+
+Te działania zostały wykonane w skrypcie `oczyszczanie_danych.R`, który załączymy do niniejszego raportu. Na koniec zapisaliśmy dane do pliku `dane.RData`.
+
+```{r wczytanie danych}
+load("dane.RData")
+```
+
+## Zbiorcza tabelka
+
+```{r podsumowanie danych}
+mindane <- NULL
+maxdane <- NULL
+mediadane <- NULL
+srdane <- NULL
+normalnosc <- rep(0, ncol(dane)-1)
+shapiro <- NULL
+#zaczynamy od drugiej kolumny bo pierwsza to płeć
+for( i in 2:ncol(dane)){
+  mindane <- c(mindane,min(as.numeric(dane[, i]))) 
+  maxdane <- c(maxdane,max(as.numeric(dane[, i])))
+  mediadane <- c(mediadane,median(as.numeric(dane[, i])))
+  srdane <- c(srdane, round(mean(as.numeric(dane[,i])),2))
+  shapiro <- c(shapiro, shapiro.test(as.numeric(dane[, i]))$p.value)
+}
+for (i in 1:length(shapiro)){
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "NIE"} else if (shapiro[i]<=0.1) {
+    normalnosc[i] <- "decyzja niejednoznaczna" }else 
+      normalnosc [i] <- "TAK"
+}
+
+
+labelki <- c( "Wiek", "Jestem w złym humorze", "Czuję się świetnie",
+         "Jestem w złym nastroju", "Czuję się rozluźniony i spokojny", 
+         "Czuję się szaro i beznadziejnie",
+         "Jestem w dobrym humorze",
+         "Jestem pogodny", "Czuję się przygnębiony", 
+         "Moje samopoczucie jest złe", 
+         "Moje samopoczucie jest dobre",
+         "Radość", "Niepokój", "Strach", "Miłość", "Gniew",
+         "Wesołość", "Upokorzenie", "Smutek", "Wzburzenie", 
+         "Lęk", "Żal", "Obawa", "Złość", "Załamanie", 
+         "Szczęście", "Wściekłość", "Oddanie", "Zadowolenie",
+         "Czułość", "Wstyd", "Poczucie winy", "Przywiązanie", 
+         "Depresja", "Nieszczęście", 
+         "Liczba godzin przespanych w ciągu doby",
+         "Posiadanie wyznaczonych pór snu", 
+         "Jakość snu", 
+         "Godziny poświęcane tygodniowo na sport",
+         "Najczęściej wybierany środek transportu", 
+         "Ocena kondycji fizycznej", 
+         "Godziny spędzone dziennie na pracy na urządzeniach elektronicznych",
+         "Godziny spędzone dziennie na rozrywce na urządzeniach elektronicznych",
+         "Poczucie uzależnienia od urządzeń elektronicznych",
+         "Przeważający składnik w diecie", 
+         "Dbanie o jakość posiłków", 
+         "Regularność posiłków", 
+         "Posiadanie zaufanej osoby", 
+         "Liczba osób, z którymi utrzymuje się bliski konatkt",
+         "Jakie znaczenie mają dla Ciebie kontakty z innymi ludźmi?",  
+         "Ogólna ocena samopoczucia")
+```
+
+```{r tabelka}
+tabela_cala <- cbind(labelki,mindane, mediadane,srdane, maxdane, normalnosc)
+#tabela_cala <- as.tabular(tabela_cala)
+tabela_cala1 <- tabela_cala[1,]
+tabela_cala2 <- tabela_cala[2:11,]
+tabela_cala3 <- tabela_cala[12:35,]
+tabela_cala4 <- tabela_cala[36:38,]
+tabela_cala5 <- tabela_cala[39:41,]
+tabela_cala6 <- tabela_cala[42:44,]
+tabela_cala7 <- tabela_cala[45:47,]
+tabela_cala8 <- tabela_cala[48:51,]
+```
+
+```{r tabelka cała 1 kable, results='asis'}
+#kable(tabela_cala1, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+#   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące aktualnego nastroju były oceniane 5-cio stopniową skalą. Wartości 1-5 oznaczały odpowiednio: "1 - nie zgadzam się", "2 - raczej się nie zgadzam", "3 - trochę tak, trochę nie", "4 - raczej się zgadzam", "5 - zgadzam się".
+
+```{r tabelka cała 2 kable, results='asis'}
+kable(tabela_cala2, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Przy ocenie częstości odczuwania poszczególnych emocji, do wyboru były odpowiedzi oceniane w skali 7-mio stopniowej. Oznaczały odpowiednio: "1 - nigdy", "2 - bardzo rzadko", "3 - rzadko", "4 - czasami", "5 - często", "6 - bardzo często", "7 - zawsze".
+
+```{r tabelka cała 3 kable, results='asis'}
+kable(tabela_cala3, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące snu oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- średniej liczby przesypianych godzin oznaczały: "1 - mniej niż 4", "2 - 4-6h", "3 - 6-8h", "4 - 8-10h", "5 - więcej niż 10h";
+- posiadania wyznaczonych pór snu określały: "1 - posiadanie regularnych pór snu" do "5 - posiadanie nieregularnych pór snu";
+- oceny jakości snu określały: "1 - bardzo zła jakość" do "5 - bardzo dobra jakość".
+
+```{r tabelka cała 4 kable, results='asis'}
+kable(tabela_cala4, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące sportu oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- liczby godzin poświęconych tygodniowo na sport oznaczały: "1 - nie uprawiam żadnego sportu", "2 - mniej niż 1h", "3 - 1-2,5h", "4 - 2,5-4h", "5 - więcej niż 4h";
+- najczęściej wybieranego środka transportu oznaczały: "1 - samochód", "2 - komunikacja miejska", "3 - rower", "4 - chodzenie pieszo", "5 - inny";
+- oceny własnej kondyncji fizycznej określały: "1 - bardzo zła" do "5 - bardzo dobra".
+
+```{r tabelka cała 5 kable, results='asis'}
+kable(tabela_cala5, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące korzystania z urządzeń elektronicznych oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- średniej liczby godzin poświęcanej w ciągu dnia na korzystanie z u.e. w celu pracy bądź nauki oznaczały: "1 - nie używam/rzadko używam komputera do pracy/nauki", "2 - mniej niż 3", "3 - 3-5h", "4 - 5-8h", "5 - powyżej 5h";
+- średniej liczby godzin poświęconej w ciągu dnia na korzystanie z u.e w celach rozrywkowych oznaczały:
+"1 - mniej niż 1h", "2 - 1-2h", "3 - 2-3h", "4 - 3-4h", "5 - więcej niż 4h";
+- częstości występowania poczucia uzależnienia od u.e. oznaczały: "1 - nigdy", "2 - rzadko", "3 - czasami", "4 - często", "5 - bardzo często".
+
+```{r tabelka cała 6 kable, results='asis'}
+kable(tabela_cala6, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące diety oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- przeważającego składnika diety oznaczały: "1 - fast food", "2 - żywność mocno przetworzona (mrożonki, gotowe dania)", "3 - mięso i ciężkostrawne potrawy", "4 - warzywa i owoce", "5 - mam zbilansowaną dietę";
+- wagi przywiązywanej do jakości spożywanych posiłków oznaczały: "1 - wszystko mi jedno", "2 - nie jest to moim priorytetem", "3 - staram się jeść zdrowo, ale mi nie wychodzi", "4 - jest to dla mnie dość ważne", "5 - jestem tym, co jem!";
+- regularności spożywanych posiłków oznaczały: "1 - jem nieregularnie", "2 - różnie z tym bywa", "3 - staram się jeść regularnie", "4 - zazwyczaj jem regularnie", "5 - mam stałe pory posiłków".
+
+```{r tabelka cała 7 kable, results='asis'}
+kable(tabela_cala7, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Pytania dotyczące kontaktów towarzyskich oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
+
+- posiadania osoby, na której można polegać w trudnej sytuacji oznaczały: "1 - nie mam nikogo takiego", "2 - z rodziną/znajomymi nie poruszam poważnych tematów", "3 - nie czuję się komfortowo rozmawiając na trudne tematy z rodziną/znajomymi", "4 - na ogół mam do kogo zwrócić się z problemem", "5 - mam osoby, z którymi mogę porozmawiać o wszystkim";
+- liczby osób, z którymi utrzymuje się stały kontakt oznaczały: "1 - brak takiej osoby", "2 - jedną osobę", "3 - 2-3 osoby", "4 - 4-5 osób", "5 - 5 i więcej osób";
+- znaczenia, jakie mają dla ankietowanego kontakty z innymi ludźmi oznaczały "1 - brak znaczenia" do "5 - bardzo duże znaczenie".
+
+```{r tabelka cała 8 kable, results='asis'}
+kable(tabela_cala8, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+```
+
+Ogólna ocena samopoczucia została uzyskana poprzez zsumowanie wartości uczuć pozytywnych ze znakiem dodatnim oraz negatywnych z ujemnym. 
+
+# Hipotezy badawcze oraz ich weryfikacja
+
+
+$H_0:$ nie istnieje zależność pomiędzy zmiennymi.
+
+$H_1:$ istnieje zależność pomiędzy zmiennymi.
+
+Hipotezy badane są na poziomie istotności $\alpha = 0.05$.
+
+## Hipoteza I
+
+Badanie, czy istnieje zależność pomiędzy poczuciem upokorzenia a jakością snu.
+
+```{r hipoteza 1 testy}
+r1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
+         method = "spearman")$p.value
+wsp_kor1 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
+         method = "spearman")$estimate
+r2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
+         method = "kendall")$p.value
+wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokorzenie),
+         method = "kendall")$estimate
+```
+
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r1)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
+
+### Wykresy boxplot
+```{r hipoteza 1 boxplot}
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "poziomy")
+boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+
+### Tabela kontygencji
+
+
+```{r hipoteza 1 tabelka}
+ttab <- prop.table(table(dane$upokorzenie, dane$jakosc_snu), margin = 2)*100
+ttab_round <- round(ttab,2)
+ tabelka <- tabular((Upokorzenie = dane$upokorzenie)~  Format(digits =2)*(`Jakość snu` = dane$jakosc_snu)*Heading()*Percent("col"))
+
+```
+
+
+
+
+```{r hipoteza 1 kable,  results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+Poniżej przedstawiony wykres zawieraj wartości procentowe, nie liczebności dla poszczególnych odpowiedzi; podobnie jak w przypadku wykresów tego typu przedstawionych dla kolejnych hipotez.
+
+```{r hipoteza 1 barplot}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+bar <- barplot(ttab,
+        main = "Odczuwanie upokorzenia w zależności od jakości snu",
+        xlab="Jakość snu",
+        ylab="Procentowy rozkład poczucia upokorzenia",
+        col=colf(7),
+        names.arg = c("bardzo zła", "kiepska", "przeciętna", "dobra", "bardzo dobra"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = colf(7),
+       cex=0.9)
+barlabels(bar, ttab_round)
+```
+
+
+
+## Hipoteza II
+
+Badanie, czy istnieje zależność pomiędzy dietą a poczuciem radości.
+
+```{r hipoteza 2 testy}
+r3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+         method = "spearman")$p.value
+r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+         method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r3)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
+
+### Wykresy boxplot
+```{r hipoteza 2 boxplot}
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$dieta), main = "Dieta",ylab = "poziomy")
+boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+### Tabela kontygencji
+
+```{r hipoteza 2 tabelka}
+tabelka <- tabular((`Poczucie radości` = dane$radosc)~  Format(digits =2)*(`Jakość diety` = dane$dieta)*Heading()*Percent("col"))
+
+
+```
+
+```{r hipoteza 2 kable, results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+```{r hipoteza 2 barplot}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+ttab <- prop.table(table(dane$radosc, dane$dieta), margin = 2)*100
+ttab_round <- round(ttab, 2)
+
+bar <- barplot(ttab,
+        main = "Odczuwanie radości, w zależności od rodzaju diety",
+        xlab="Rodzaj diety",
+        ylab="Procentowy rozkład poczucia radości",
+        col=colf(7),
+        names.arg = c("fast food", "przetworzona", "mięso","wegetariańska", "zbilans."))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = colf(7),
+       cex=0.9)
+barlabels(bar, ttab_round)
+```
+
+## Hipoteza III
+
+Badanie, czy istnieje zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju.
+
+```{r hipoteza 3 testy}
+r5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "spearman")$p.value
+r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "kendall")$p.value
+```
+
+P-value dla obu testów wynosi około $p =$ `r sprintf("%.3f", r5)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+
+### Tabela kontygencji
+
+```{r hipoteza 3 tabelka}
+tabelka <- tabular((`Niepokój` = dane$niepokoj)~  Format(digits =2)*(`Liczba bliskich znajomych` = dane$liczba_osob_kontakty)*Heading()*Percent("col"))
+
+
+```
+
+```{r hipoteza 3 kable,  results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+```{r hipoteza 3 barplot}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+ttab <- prop.table(table(dane$niepokoj, dane$liczba_osob_kontakty), margin = 2)*100
+ttab_round <- round(ttab,2)
+
+bar <- barplot(ttab,
+        main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
+        xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
+        ylab="Procentowy rozkład poczucia radości",
+        col=colf(7),
+        names.arg = c("0", "1", "2-3","4-5", "więcej niż 5"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Częstość",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = colf(7),
+       cex=0.9)
+barlabels(bar, ttab_round)
+```
+
+```{r hipoteza 3 korelacje}
+wsp_kor5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "spearman")$estimate
+wsp_kor6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor5` oraz `r wsp_kor6`. Interpretując te współczynniki oraz dane z wykresów, można stwierdzić, że wraz ze wzrostem liczby osób, z którymi utrzymuje się regularny kontakt, spada częstość odczuwania niepokoju.
+
+
+```{r hipoteza 3 bubble chart}
+dane %>%
+  ggplot(aes(x = liczba_osob_kontakty, y = niepokoj, size = liczba_osob_kontakty, color = niepokoj))+
+  geom_point(alpha = 0.7)
+```
+
+Ten bubble chart jest na razie bez sensu, wrzucam tutaj żebyśmy mieli jak to zrobić.... Nie bardzo rozumiem jak to ma być kolorowane ani od czego wielkość ma zależeć (A.)
+
+## Hipoteza IV
+
+Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń.
+
+```{r hipoteza 4 testy}
+r7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "spearman")$p.value
+r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "kendall")$p.value
+```
+
+P-value dla obu testów są nieistotnie różne od zera ($p < 0.001***$). Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+
+### Tabela kontygencji
+
+```{r hipoteza 4 tabelka}
+tabelka <- tabular((`Poczucie uzależnienia` = dane$poczucie_uzaleznienia_urzadzenia)~  Format(digits =2)*(`Godziny spędzone na używaniu urządzeń elektronicznych` = dane$godziny_rozrywki_urzadzenia)*Heading()*Percent("col"))
+
+
+```
+
+```{r hipoteza 4 kable, results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+```{r hipoteza 4 barplot}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+ttab <- prop.table(table(dane$poczucie_uzaleznienia_urzadzenia, dane$godziny_rozrywki_urzadzenia), margin = 2)*100
+ttab_round <- round(ttab,2)
+bar <- barplot(ttab,
+        main = "Zależność pomiędzy czasem spędzonym na komputerze \n dla rozrywki a poczuciem uzależnienia",
+        xlab="Liczba godzin spędzonych na komputerze w celach rozrywkowych",
+        ylab="Procentowy rozkład poczucia uzależnienia od urządzeń",
+        col=colf(7),
+        names.arg = c("mniej niż 1", "1-2", "2-3","3-4", "więcej niż 4"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Poczucie uzależnienia",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = colf(7),
+       cex=0.75)
+barlabels(bar, ttab_round)
+```
+
+```{r hipoteza 4 korelacje}
+wsp_kor7 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "spearman")$estimate
+wsp_kor8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
+               y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor7` oraz `r wsp_kor8`. Wniosek: wraz ze wzrostem liczby godzin, spędzonych na korzystaniu dla rozrywki z urządzeń elektronicznych, wzrasta znacznie poczucie uzależnienia od tych urządzeń.
+
+## Hipoteza V
+
+Badanie, czy istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+
+```{r hipoteza 5 testy}
+r9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "spearman")$p.value
+r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "kendall")$p.value
+```
+
+P-value dla obu testów są nieistotnie różne od zera ($p < 0.001***$). Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+
+### Tabela kontygencji
+
+```{r hipoteza 5 tabelka}
+tabelka <- tabular((`Jakość snu` = dane$jakosc_snu)~  Format(digits =2)*(`Posiadanie wyznaczonych pór snu` = dane$wyzn_pory_snu)*Heading()*Percent("col"))
+
+
+```
+
+```{r hipoteza 5 kable, results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+```{r hipoteza 5 barplot}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+ttab <- prop.table(table(dane$jakosc_snu, dane$wyzn_pory_snu), margin = 2)*100
+ttab_round <- round(ttab,2)
+bar <- barplot(ttab,
+        main = "Zależność pomiędzy jakością snu \n a posiadaniem jego wyznaczonych pór",
+        ylab="Rozkład procentowy jakości snu",
+        col = colf(5),
+        names.arg = c("nie", "raczej nie", "czasami", "raczej tak", "tak"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Jakość snu",
+       legend = c("b.zła", "kiepska", "przeciętna", "dobra", "b.dobra"),
+       fill = colf(5),
+       cex=0.8)
+barlabels(bar, ttab_round)
+```
+
+```{r hipoteza 5 korelacje}
+wsp_kor9 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "spearman")$estimate
+wsp_kor10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
+               y = as.numeric(dane$jakosc_snu),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` są dość duże i wynoszą odpowiednio `r wsp_kor9` oraz `r wsp_kor10`. Im bardziej regularne są pory snu, tym lepsza jest jego jakość.
+
+## Hipoteza VI
+
+Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+
+```{r hipoteza 6 testy}
+r11 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "spearman")$p.value
+r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "kendall")$p.value
+```
+
+P-value dla testu $p =$ `rho-Spearmana` wynosi `r sprintf("%.3f", r11)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+
+### Tabela kontygencji
+
+```{r hipoteza 6 tabelka}
+tabelka <- tabular((`Załamanie` = dane$zalamanie)~  Format(digits =2)*(`Liczba godzin przeznaczonych na sport` = dane$godziny_sportu)*Heading()*Percent("col"))
+
+
+```
+
+```{r hipoteza 6 kable, results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+```{r hipoteza 6}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+ttab <- prop.table(table(dane$zalamanie, dane$godziny_sportu), margin = 2)*100
+ttab_round <- round(ttab,2)
+bar <- barplot(ttab,
+        main = "Zależność pomiędzy godzinami poświęconymi na sport \n a poczuciem załamania",
+        xlab="Liczba godzin w tygodniu przeznaczonych na sport",
+        ylab="Rozkład procentowy poczucia załamania",
+        col = colf(7),
+        names.arg = c("0", "mniej niż 1", "1-2,5", "2,5-4", "więcej niż 4"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Załamanie",
+       legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
+       fill = colf(7),
+       cex=0.8)
+barlabels(bar, ttab_round)
+```
+
+```{r hipoteza 6 korelacje}
+wsp_kor11 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "spearman")$estimate
+wsp_kor12 <- cor.test(x = as.numeric(dane$godziny_sportu),
+               y = as.numeric(dane$zalamanie),
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor11` oraz `r wsp_kor12`. Im więcej godzin poświęca się tygodniowo na sport, tym rzadziej odczuwa się załamanie.
+
+## Hipoteza VII
+
+Badanie, czy istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+
+```{r hipoteza 7 testy}
+r13 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "spearman")$p.value
+r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "kendall")$p.value
+```
+
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r13)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r14)`$**$. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+
+### Tabela kontygencji
+
+```{r hipoteza 7 tabelka}
+tabelka <- tabular((`Dobry humor` = dane$dobry_humor)~  Format(digits =2)*(`Jakość posiłków` = dane$jakosc_posilkow)*Heading()*Percent("col"))
+
+
+```
+
+```{r hipoteza 7 kable, results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = TRUE)
+
+```
+
+### Wykresy słupkowe
+
+```{r hipoteza 7 barplot}
+par(mar=c(5.1, 4.1, 4.1, 5.2), xpd=TRUE)
+ttab <- prop.table(table(dane$dobry_humor, dane$jakosc_posilkow), margin = 2)*100
+ttab_round <- round(ttab,2)
+bar <- barplot(ttab,
+        main = "Zależność pomiędzy jakością posiłków a dobrym humorem",
+        ylab="Rozkład procentowy aktualnego humoru",
+        col = colf(5),
+        names.arg = c("żadną", "małą", "średnią", "dużą", "bardzo dużą"))
+legend("topright",
+       inset=c(-0.2,0),
+       title = "Humor",
+       legend = c("zły", "kiepski", "średni", "dobry", "b.dobry"),
+       fill = colf(5),
+       cex=0.95)
+barlabels(bar, ttab_round)
+```
+
+```{r hipoteza 7 korelacje}
+wsp_kor13 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "spearman")$estimate
+wsp_kor14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
+               y = as.numeric(dane$dobry_humor),
+               method = "kendall")$estimate
+```
+
+Zarówno współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszące odpowiednio `r wsp_kor13` oraz `r wsp_kor14`, jak i wykresy słupkowe jasno wskazują na istotną zależność pomiędzy badanymi zmiennymi. Im większe znaczenie ma jakość spożywanych posiłków, tym lepszy humor się odczuwa.
+
+## Hipoteza VIII
+
+Badanie zależności między płcią a ogólną oceną samopoczucia.
+
+### Średnia ocena samopoczucia w grupie kobiet i mężczyzn
+
+```{r hipoteza 8 średnie}
+tabelka <- tabular((`Ogólna ocena samopoczucia` = dane$ocena_samop_ogolna)~  Format(digits =2)*(`Płeć` = dane$plec)*Heading()*mean)
+
+
+```
+
+```{r hipoteza 8 kable,  results = 'asis'}
+
+
+ toKable(tabelka) %>%
+   kable_styling(full_width = F)
+
+```
+
+### Wykres boxplot
+
+```{r hipoteza 8 boxplot}
+boxplot(dane$ocena_samop_ogolna~dane$plec)
+
+```
+
+### Badanie zależności
+
+```{r hipoteza 8 shapiro}
+shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
+
+```
+
+P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi $p =$ `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
+
+
+
+
+```{r hipoteza 8 wilcox}
+pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
+```
+
+
+P-value z testu Manna - Whitney'a - Wilcoxona wynosi $p =$ `r sprintf("%.3f", pval)` $**$. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+
+## Hipoteza IX
+
+Badanie zależności między wiekiem a ogólną oceną samopoczucia. Zmienne nie mają rozkładów normalnych, więc wybieramy test Kruskala-Wallisa.
+
+```{r hipoteza 9 kruskal}
+pval <- kruskal.test(ocena_samop_ogolna~wiek, data = dane)$p.value
+```
+
+P-value wynosi około 0.063, więc decyzja jest niejednoznaczna, ale na wybranym przez nas poziomie istotności 0.05 nie ma podstaw do odrzucenia hipotezy zerowej.
+
+```{r hipoteza 9  testy}
+r11 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "spearman")$p.value
+r12 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "kendall")$p.value
+```
+
+
+Testy Spearmana oraz Kendalla jednoznacznie wskazują, że należy odrzucić hipotezę zerową (p-value odpowiednio 0.008 oraz 0.01).
+
+```{r hipoteza 9 korelacje}
+r11 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "spearman")$estimate
+r12 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji z tych testów wynoszą odpowiednio 0.172 i 0.119, zatem wzrost wieku powoduje wzrost oceny ogólnej samopoczucia.
+
+## Hipoteza X
+
+Zbadamy, czy średnie ogólnej oceny samopoczucia różnią się w trzech grupach wiekowych. Ze względu na silną prawostronną asymetrię, wybraliśmy następujące grupy wiekowe:
+
+- poniżej 21 lat
+
+- pomiędzy 21 a 24 lata
+
+- 25 i więcej lat
+
+```{r hipoteza 10 utworzenie kategorii wiekowych}
+dane$wiek_kat<- factor(findInterval(dane$wiek,c(21,25)),levels = 0:2, labels = c("<21","21-24",">=25"),ordered = T)
+wiek_kat <- factor(findInterval(dane$wiek,c(21,25)),levels = 0:2, labels = c("<21","21-24",">=25"),ordered = T)
+tabelka <- table(wiek_kat)
+tabelka <- as.data.frame(tabelka)
+colnames(tabelka) <- c("Grupa wiekowa", "Liczebność")
+```
+
+Poszczególne grupy wiekowe mają następującą liczebność:
+
+```{r hipoteza 10 wiek tabelki}
+kable(tabelka) %>%
+  kable_styling(full_width = F)
+```
+
+
+
+```{r hipoteza 10 boxplot}
+dane %>%
+  ggboxplot(x = "wiek_kat", y = "ocena_samop_ogolna", fill = "wiek_kat")
+```
+
+```{r hipoteza 10 anova}
+mod <- aov(ocena_samop_ogolna~wiek_kat, data = dane)
+summary(mod)
+```
+
+
+Z wykresu boxplot można przypuszczać, że raczej nie ma bardzo istotnych różnic pomiędzy grupami.
+
+Z testu ANOVA otrzymujemy p-value około 0.246, zatem grupa wiekowa nie różnicuje istotnie oceny ogólnej samopoczucia.
+
+# Dane zsumowane
+
+```{r sumowanie danych}
+sen <- cbind(dane$jakosc_snu, dane$liczba_przespanych_godzin, dane$wyzn_pory_snu)
+dieta <- cbind(dane$jakosc_posilkow, dane$dieta, dane$regularnosc_posilkow)
+aktywnosc <- cbind(dane$kondycja_fizyczna, dane$srodek_transportu, dane$godziny_sportu)
+urzadzenia <- cbind(dane$godziny_pracy_urzadzenia, dane$godziny_rozrywki_urzadzenia, dane$poczucie_uzaleznienia_urzadzenia)
+kontakty <- cbind(dane$liczba_osob_kontakty, dane$znaczenie_kontaktow, dane$posiadanie_zaufanej_osoby)
+dane_sum <- cbind( dane$plec,dane$wiek, rowSums(sen), rowSums(dieta), rowSums(aktywnosc), rowSums(urzadzenia), rowSums(kontakty), dane$ocena_samop_ogolna)
+dane_sum <- as.data.frame(dane_sum)
+colnames(dane_sum) <- c("plec", "wiek", "sen", "dieta", "aktywnosc", "urzadzenia", "kontakty", "samopoczucie")
+```
+
+Wcześniej pracowaliśmy osobno na odpowiedziach z ankiety. Teraz będziemy pracować na danych, w których odpowiedzi z danych kategorii zostały zsumowane, tj. zmienne sen, dieta, aktywność, urządzenia i kontakty są sumą trzech odpowiednich zmiennych wymienionych wcześniej:
+
+- na ocenę snu składa się ocena jego jakości, posiadania wyznaczonych pór snu oraz liczby przespanych godzin
+
+- na ocenę diety składa się ocena jakości posiłków, przeważający składnik diety oraz regularność posiłków
+
+- na ocenę aktywności fizycznej składa się ocena kondycji, liczba godzin poświęcanych tygodniowo na sport oraz preferowany środek transportu
+
+- na ocenę czasu spędzanego z urządzeniami elektronicznymi składa się dzienna liczba godzin spędzana na pracy z urządzeniami, dzienna liczba godzin poświęcana na rozrywkę przy użyciu urządzeń oraz poczucie uzależnienia od urządzeń
+
+- na ocenę kontaktów towarzyskich składa się ocena ważności kontaktów międzyludzkich dla danej osoby, posiadanie zaufanej osoby oraz liczba osób, z którymi utrzymuje się regularny kontakt
+
+Wcześniej poszczególne czynniki były ocenione w skali od 1 do 5, więc teraz skala wynosi od 1 do 15.
+
+Oprócz tego do nowego zbioru danych włączamy zmienne płeć, wiek oraz ogólna ocena samopoczucia.
+
+```{r sumowanie danych tabelka}
+mindane <- NULL
+maxdane <- NULL
+mediadane <- NULL
+srdane <- NULL
+normalnosc <- rep(0, ncol(dane_sum)-1)
+shapiro <- NULL
+#zaczynamy od drugiej kolumny bo pierwsza to płeć
+for( i in 2:ncol(dane_sum)){
+  mindane <- c(mindane,min(as.numeric(dane_sum[, i]))) 
+  maxdane <- c(maxdane,max(as.numeric(dane_sum[, i])))
+  mediadane <- c(mediadane,median(as.numeric(dane_sum[, i])))
+  srdane <- c(srdane, round(mean(as.numeric(dane_sum[,i])),2))
+  shapiro <- c(shapiro, shapiro.test(as.numeric(dane_sum[, i]))$p.value)
+}
+for (i in 1:length(shapiro)){
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "NIE"} else if (shapiro[i]<=0.1) {
+    normalnosc[i] <- "decyzja niejednoznaczna" }else 
+      normalnosc [i] <- "TAK"
+}
+labelki <- c("Wiek", "Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty", "Samopoczucie")
+tabela_cala <- cbind( labelki, mindane, mediadane,srdane, maxdane, normalnosc)
+tabela_cala <- as.data.frame(tabela_cala)
+colnames(tabela_cala) <- c("Cecha", "Min", "Mediana", "Średnia", "Max", "Czy rozkład jest normalny?")
+```
+
+```{r sumowanie danych kable, results = 'asis'}
+kable(tabela_cala)%>%
+  kable_styling(full_width = T, latex_options = c("scale_down"))
+```
+
+
+```{r sumowanie danych boxplot}
+boxplot(dane_sum$sen, dane_sum$dieta, dane_sum$aktywnosc, dane_sum$urzadzenia, dane_sum$kontakty,
+        names = c("Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty"),col = "pink")
+```
+Z wykresu boxplot widać, że najlepsze oceny pojawiały się w kategorii Kontakty. W przypadku pozostałych czynników, oceny są na podobnym poziomie, z medianami pomiędzy 8 a 10.
+
+
+## Sen a samopoczucie
+
+```{r sen a samopoczucie testy}
+r1 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor1 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r2 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor2 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+Z testów Kendalla oraz Spearmana otrzymujemy p-value praktycznie równe zero. Oznacza to, że zależność pomiędzy snem a samopoczuciem jest istotna statystycznie. Współczynniki korelacji wynoszą 0.261 dla Spearmana i 0.191 dla Kendalla. Oznacza to, że im lepiej śpimy, tym lepsze samopoczucie mamy :)
+
+## Dieta a samopoczucie
+
+```{r dieta a samopoczucie testy}
+r3 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor3 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r4 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor4 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+Z testów Spearmana oraz Kendalla otrzymujemy p-value praktycznie równe zero. Istnieje zależność pomiędzy dietą a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.322 dla Spearmana oraz 0.232 dla Kendalla. Im lepsza jakość naszej diety, tym lepsze  nasze samopoczucie :)
+
+## Aktywność a samopoczucie
+
+
+```{r aktywność a samopoczucie testy}
+r5 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor5 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r6 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor6 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+Z testów Spearmana oraz Kendalla otrzymujemy p-value około 0.01, co pozwala odrzucić hipotezę zerową o braku zależności. Współczynniki korelacji wynoszą odpowiednio 0.163 dla Spearmana i 0.116 dla Kendalla. Im więcej mamy aktywności, tym lepsze nasze samopoczucie :)
+
+## Urządzenia a samopoczucie
+
+```{r urządzenia a samopoczucie testy}
+r7 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor7 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r8 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor8 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+P-value z testów Spearmana oraz Kendalla wynoszą około 0.01, a więc odrzucamy hipotezę o braku zależności. Współczynniki korelacji wynoszą odpowiednio -0.162 dla Spearmana oraz -0.115 dla Kendalla. Im więcej korzystamy z urządzeń elektronicznych, tym gorsze nasze samopoczucie :( Moje na przykład pogorszyło się podczas robienia tego projektu.
+
+## Kontakty a samopoczucie
+
+```{r kontakty a samopoczucie}
+r9 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wsp_kor9 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+r10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$p.value
+wsp_kor10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "kendall")$estimate
+```
+
+P-value z obu testów są praktycznie równe zero. Istnieje zależność pomiędzy kontaktami towarzyskimi a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.455 dla Spearmana i 0.329 dla Kendalla.
+Im lepsze nasze kontakty towarzyskie, tym lepsze nasze samopoczucie :)
+
+## Modelik
+
+
+```{r mały modelik liniowy}
+mod <- lm(samopoczucie~sen+dieta+aktywnosc+urzadzenia+kontakty, data = dane_sum)
+summary(mod)
+```
+Może uznajmy, że wszystkie zmienne są istotne statystycznie, chociaż sen jest na granicy.
+
+Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
+
+# Wnioski
+
+Wykazaliśmy następujące związki:
+
+- wraz ze wzrostem liczby bliskich znajomych, spada częstość odczuwania niepokoju
+
+- im więcej godzin spędzamy na korzystaniu z urządzeń elektronicznych dla rozrywki, tym bardziej czujemy się od nich uzależnieni (co wydaje się oczywistym związkiem, i według testów statystycznych jest prawie pewne, ponieważ p-value było bardzo małe dla tej hipotezy, praktycznie zero)
+
+- z podobną pewnością jak powyższą hipotezę, wykazaliśmy, że im bardziej regularne pory snu, tym lepsza jest jego jakość
+
+- im więcej godzin tygodniowo poświęca się na sport, tym rzadziej odczuwa się załamanie
+
+- im większą wagę ktoś przywiązuje do jakości swoich posiłków, tym lepszy ma humor
+
+- zależność między wiekiem a samopoczuciem można opisać modelem liniowym
+
+Wykazaliśmy także, że nie zachodzą związki:
+
+- pomiędzy jakością snu a poczuciem upokorzenia - chociaż tutaj wynik był na krawędzi, ocierał się o wniosek, że im gorsza jakość snu, tym częściej odczuwamy upokorzenie
+
+- pomiędzy dietą a poczuciem radości
+
+
+Porównując wyniki w różnych podgrupach, odkryliśmy, że:
+
+- średnia ocena ogólna samopoczucia różniła się między grupą kobiet a mężczyzn, w dodatku była znacznie niższa (-8) w grupie kobiet niż mężczyzn (3.2)
+
+
+# Bibliografia
+
+
+
+
+[@nastroj]
+[@testy]
