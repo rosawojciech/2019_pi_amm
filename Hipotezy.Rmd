@@ -32,6 +32,7 @@ library(tidyverse)
 library(lmtest)
 library(ggplot2)
 library(ggcorrplot)
+library(ggpubr)
 library(stargazer)
 library(tables)
 library(Hmisc)
@@ -747,17 +748,76 @@ P-value z testu Manna - Whitney'a - Wilcoxona wynosi $p =$ `r sprintf("%.3f", pv
 
 Badanie zależności między wiekiem a ogólną oceną samopoczucia. Zmienne nie mają rozkładów normalnych, więc wybieramy test Kruskala-Wallisa.
 
-```{r}
+```{r hipoteza 9 kruskal}
 pval <- kruskal.test(ocena_samop_ogolna~wiek, data = dane)$p.value
 ```
 
 P-value wynosi około 0.063, więc decyzja jest niejednoznaczna, ale na wybranym przez nas poziomie istotności 0.05 nie ma podstaw do odrzucenia hipotezy zerowej.
 
-Nie ma istotnej zależności pomiędzy wiekiem a ogólną oceną samopoczucia.
+```{r hipoteza 9  testy}
+r11 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "spearman")$p.value
+r12 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "kendall")$p.value
+```
+
+
+Testy Spearmana oraz Kendalla jednoznacznie wskazują, że należy odrzucić hipotezę zerową (p-value odpowiednio 0.008 oraz 0.01).
+
+```{r hipoteza 9 korelacje}
+r11 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "spearman")$estimate
+r12 <- cor.test(x = dane$wiek,
+               y = dane$ocena_samop_ogolna,
+               method = "kendall")$estimate
+```
+
+Współczynniki korelacji z tych testów wynoszą odpowiednio 0.172 i 0.119, zatem wzrost wieku powoduje wzrost oceny ogólnej samopoczucia.
 
 ## Hipoteza X
 
-Zamiast badać związek pomiędzy wiekiem a średnim samopoczuciem, możemy też sprawdzić, czy średnie samopoczucie różni się w kilku grupach wiekowych (ANOVA?), np. poniżej 18, 18-25, powyżej 25.
+Zbadamy, czy średnie ogólnej oceny samopoczucia różnią się w trzech grupach wiekowych. Ze względu na silną prawostronną asymetrię, wybraliśmy następujące grupy wiekowe:
+
+- poniżej 21 lat
+
+- pomiędzy 21 a 24 lata
+
+- 25 i więcej lat
+
+```{r}
+dane$wiek_kat<- factor(findInterval(dane$wiek,c(21,25)),levels = 0:2, labels = c("<21","21-24",">=25"),ordered = T)
+wiek_kat <- factor(findInterval(dane$wiek,c(21,25)),levels = 0:2, labels = c("<21","21-24",">=25"),ordered = T)
+tabelka <- table(wiek_kat)
+tabelka <- as.data.frame(tabelka)
+colnames(tabelka) <- c("Grupa wiekowa", "Liczebność")
+```
+
+Poszczególne grupy wiekowe mają następującą liczebność:
+
+```{r}
+kable(tabelka) %>%
+  kable_styling()
+```
+
+
+
+```{r}
+dane %>%
+  ggboxplot(x = "wiek_kat", y = "ocena_samop_ogolna", fill = "wiek_kat")
+```
+
+```{r}
+mod <- aov(ocena_samop_ogolna~wiek_kat, data = dane)
+summary(mod)
+```
+
+
+Z wykresu boxplot można przypuszczać, że raczej nie ma bardzo istotnych różnic pomiędzy grupami.
+
+Z testu ANOVA otrzymujemy p-value około 0.246, zatem grupa wiekowa nie różnicuje istotnie oceny ogólnej samopoczucia.
 
 # Wnioski
 
