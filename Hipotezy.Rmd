@@ -51,10 +51,6 @@ Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na
 
 # Opis danych
 
-
-
-(Import, obróbka, wstępna analiza, testy na normalność)
-
 ## Zbieranie danych, opis badanej grupy
 
 Dane zebraliśmy na podstawie ankiety. Pytania dotyczące emocji pochodzą z artykułu "Skale do Pomiaru Nastroju i Sześciu Emocji" autorstwa Bogdana Wojciszke i Wiesława Baryły. Pozostałe pytania są naszego autorstwa. Ankietę stworzyliśmy za pomocą Formularzy Google i rozesłaliśmy respondentom drogą internetową.
@@ -747,63 +743,17 @@ pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
 
 P-value z testu Manna - Whitney'a - Wilcoxona wynosi $p =$ `r sprintf("%.3f", pval)` $**$. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
 
-```{r hipoteza 8 subsety}
-kobiety <- subset(dane, dane$plec == "kobieta")
-mezczyzni <- subset(dane, dane$plec == "mężczyzna")
-```
-
-### Badanie równości średnich
-
-```{r hipoteza 8 wariancje}
-pval <- var.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna)$p.value
-```
-
-Test F wykazuje, że wariancje Ogólnej oceny samopoczucia są równe w grupach kobiet i mężczyzn ($p =$ `r sprintf("%.3f", pval)`), zatem stosujemy test T dla średnich.
-
-```{r hipoteza 8 test t}
-pval <- t.test(kobiety$ocena_samop_ogolna, mezczyzni$ocena_samop_ogolna, var.equal = T, paired = F)$p.value
-```
-
-P-value z testu T wynosi `r sprintf("%.3f", pval)`, zatem odrzucamy hipotezę o równości średnich. Średnia ogólna ocena samopoczucia różni się istotnie w grupach kobiet i mężczyzn.
-
 ## Hipoteza IX
 
-Badanie zależności między wiekiem a ogólną oceną samopoczucia.
+Badanie zależności między wiekiem a ogólną oceną samopoczucia. Zmienne nie mają rozkładów normalnych, więc wybieramy test Kruskala-Wallisa.
 
-```{r hipoteza 9 model}
-mod <- lm(ocena_samop_ogolna~wiek, data = dane)
+```{r}
+pval <- kruskal.test(ocena_samop_ogolna~wiek, data = dane)$p.value
 ```
 
-```{r hipoteza 9 stargazer, results = 'asis'}
-stargazer(mod, type = "latex", header=F)
-```
+P-value wynosi około 0.063, więc decyzja jest niejednoznaczna, ale na wybranym przez nas poziomie istotności 0.05 nie ma podstaw do odrzucenia hipotezy zerowej.
 
-
-Istnieje istotna zależność pomiędzy ogólną oceną samopoczucia a wiekiem.
-
-```{r hipoteza 9 wykres}
-dane %>%
-  ggplot(aes(x = wiek, y = ocena_samop_ogolna)) +
-  geom_point() +
-  geom_smooth(se = F)+
-  geom_smooth(method = lm, color = "red", se = F)
-```
-
-Na niebiesko regresja nieparametryczna, na czerwono liniowa.
-
-```{r hipoteza 9 testy na resztach, include = F}
-plot(mod)
-nortest::lillie.test(residuals(mod))
-shapiro.test(residuals(mod)) #nie ma normalności - zle
-lmtest::gqtest(mod, order.by = ~fitted(mod))
-lmtest::hmctest(mod, order.by = ~fitted(mod))
-lmtest::bptest(mod) #nie ma heterogeniczności - ok
-lmtest::bgtest(mod, order.by = ~fitted(mod), order = 3) #nie ma autokorelacji reszt - ok
-lmtest::raintest(mod, order.by=~fitted(mod))
-lmtest::resettest(mod, power = 3, type = "regressor") #zależność jest liniowa - ok
-```
-
-Na podstawie wykresów diagnostycznych oraz odpowiednich testów mamy, że model spełnia założenia Gaussa - Markova, a jedynym problemem jest brak normalności rozkładu reszt (chociaż na wykresach diagnostycznych wygląda trochę na heterogeniczność wariancji).
+Nie ma istotnej zależności pomiędzy wiekiem a ogólną oceną samopoczucia.
 
 ## Hipoteza X
 
