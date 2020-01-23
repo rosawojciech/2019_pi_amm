@@ -983,6 +983,14 @@ bubble <- dane_sum %>%
 bubble
 ```
 
+\newpage
+
+## Infografika
+
+![width=400px](infografika.png){Wpływ badanych czynników na samopoczucie. Pod czynnikiem podany współczynnik korelacji (na tle zielonym dodatnia, na czerwonym ujemna)}
+
+\newpage
+
 # Wnioski
 
 Wykazaliśmy następujące związki:
