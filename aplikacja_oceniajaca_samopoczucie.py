@@ -12,19 +12,19 @@ twoje_odp=[] #lista, w której będą zapisane odp użytkownika
 
 #%% pytania i odpowiedzi do ankiety
 #%% sen
-pytania_sen = ["Ile godzin średnio przesypiasz w ciągu doby? ", "Czy masz wyznaczone pory snu? (1-nie, 5-tak) ",
-               "Jak oceniasz jakość swojego snu? (1-bardzo źle, 5-bardzo dobrze)"]
+pytania_sen = ["Ile godzin średnio przesypiasz w ciągu doby? ", "Czy masz wyznaczone pory snu? \n(1-nie, 5-tak) ",
+               "Jak oceniasz jakość swojego snu? \n(1-bardzo źle, 5-bardzo dobrze)"]
 odpowiedzi_sen = [["mniej niż 4", "4-6", "6-8", "8-10","więcej niż 10"],[1,2,3,4,5],[1,2,3,4,5]]
 #%%aktywnosc
 pytania_aktywnosc = ["Ile godzin tygodniowo poświęcasz na sport?","Jaki środek transportu wybierasz najczęściej? ",
-                     "Jak oceniasz swoją kondycję fizyczną? (1-źle, 5-dobrze)"]
+                     "Jak oceniasz swoją kondycję fizyczną? \n(1-źle, 5-dobrze)"]
 odpowiedzi_aktywnosc = [["nie uprawiam żadnego sportu", "mniej niż 1", "1-2.5", "2.5-4", "więcej niż 4"],
                         ["samochód", "komunikacja miejska", "rower", "chodzę pieszo", "inny"],
                         [1,2,3,4,5]]
 #%%urzadzenia
-pytania_urzadzenia = ["Ile godzin (średnio) w ciągu dnia korzystasz z urządzeń elektronicznych (komputer, laptop, tablet) pracując lub ucząc się?",
-                      "Ile godzin dziennie poświęcasz na korzystanie z urządzeń w celach rozrywkowych?",
-                      "Czy zdarza Ci się mieć poczucie, że za dużo czasu spędzasz korzystając z urządzeń elektronicznych?"]
+pytania_urzadzenia = ["Ile godzin (średnio) w ciągu dnia korzystasz \nz urządzeń elektronicznych \n(komputer, laptop, tablet) pracując lub ucząc się?",
+                      "Ile godzin dziennie poświęcasz na korzystanie \nz urządzeń w celach rozrywkowych?",
+                      "Czy zdarza Ci się mieć poczucie, \nże za dużo czasu spędzasz korzystając \nz urządzeń elektronicznych?"]
 odpowiedzi_urzadzenia = [["nie używam/rzadko używam komputera do pracy/nauki",
                           "mniej niż 3", "3-5","5-8", "powyżej 8"],
                          ["mniej niż 1", "1-2", "2-3", "3-4", "więcej niż 4"],
@@ -37,9 +37,9 @@ odpowiedzi_dieta = [["fast food", "żywność mocno przetworzona (mrożonki, got
                     ["jem nieregularnie", "różnie z tym bywa", "staram się jeść regularnie", "zazwyczaj jem regularnie", "mam stałe pory posiłków"]]
 #%%kontakty
 pytania_kontakty = ["Czy masz kogoś, na kim możesz polegać w trudnej sytuacji?", "Z iloma osobami utrzymujesz kontakt w celach towarzyskich?",
-                    "Jakie znaczenie mają dla Ciebie kontakty z innymi ludźmi? (1-małe, 5-duże)"]
-odpowiedzi_kontakty = [["nie mam nikogo takiego", "z rodziną/znajomymi nie poruszam poważnych tematów",
-                        "nie czuję się komfortowo rozmawiając na trudne tematy z rodziną/znajomymi",
+                    "Jakie znaczenie mają dla Ciebie kontakty z innymi ludźmi? \n(1-małe, 5-duże)"]
+odpowiedzi_kontakty = [["nie mam nikogo takiego", "z rodziną/znajomymi nie poruszam \npoważnych tematów",
+                        "nie czuję się komfortowo rozmawiając na trudne \ntematy z rodziną/znajomymi",
                         "na ogół mam do kogo zwrócić się z problemem","mam osoby, z którymi mogę porozmawiać o wszystkim"],
                        ["0", "1", "2-3", "4-5", "5 i więcej"],[1,2,3,4,5]]
 #%%
@@ -55,6 +55,7 @@ def start(ramka_startu):
         ramka_pytania = tk.Frame(okno, bd = 5)
         ramka_pytania.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
         pytanie = tk.Label(ramka_pytania, text = pytania_wszystkie[n])
+        pytanie.config(font=30)
         pytanie.pack(fill = "both", expand = "yes")
         przyciski_odp = []
         odp= tk.StringVar()
@@ -62,8 +63,9 @@ def start(ramka_startu):
     
         for i in range(5):
             przyciski_odp.append(tk.Radiobutton(ramka_pytania, text = odpowiedzi_wszystkie[n][i],value = odpowiedzi_wszystkie[n][i], variable = odp))
-        przyciski_odp.append(tk.Button(ramka_pytania, text = "Wybierz", command = lambda:wybieram(odp, ramka_pytania)))
+        przyciski_odp.append(tk.Button(ramka_pytania, bg="green", text = "Wybierz", command = lambda:wybieram(odp, ramka_pytania)))
         for (i, btn) in enumerate(przyciski_odp):
+            btn.config(font=30)
             btn.pack(fill = "both", expand = "yes")
     else:
         ramka_konca = tk.Frame(okno, bd = 5)
@@ -71,14 +73,19 @@ def start(ramka_startu):
         wynik = oblicz_samopoczucie()
         komunikat = "Twoja ocena samopoczucia to "+str(wynik)
         twoja_ocena = tk.Label(ramka_konca, text = komunikat)
+        twoja_ocena.config(font=44)
         twoja_ocena.pack(fill = "both", expand = "yes")
-        skala = tk.Label(ramka_konca, text = "Skala oceny od -137 do +81, średnia na podstawie naszych badań to -2.61")
+        skala = tk.Label(ramka_konca, text = "Skala oceny od -137 do +81, \nśrednia na podstawie naszych badań to -2.61")
+        skala.config(font=22)
         skala.pack(fill = "both", expand = "yes")
     
 #%%
 def wybieram(odp, ramka_pytania):
-    twoje_odp.append(odp.get())
-    start(ramka_pytania)
+    if(odp.get() == "None"):
+        tk.messagebox.showwarning(title = "Uwaga", message = "Nie wybrano żadnej odpowiedzi!")
+    else:
+        twoje_odp.append(odp.get())
+        start(ramka_pytania)
 
 
 #%%
@@ -148,6 +155,8 @@ def oblicz_samopoczucie():
     
     samopoczucie = intercept + b_sen*ocena_sen + b_dieta*ocena_dieta + b_aktywnosc * ocena_aktywnosc + b_urzadzenia*ocena_urzadzenia + b_kontakty*ocena_kontakty
     
+    samopoczucie = round(samopoczucie, 2)
+    
     return samopoczucie
         
 
@@ -163,13 +172,16 @@ WIDTH = 600
 
 okno = tk.Tk()
 okno.title("Oceń swoje samopoczucie!")
+okno.call('wm', 'iconphoto', okno._w, tk.PhotoImage(file='smiley.png'))
 canvas = tk.Canvas(okno, height = HEIGHT, width = WIDTH)
 canvas.pack()
 
 ramka_startu = tk.Frame(okno, bd = 5)
 ramka_startu.place(relx = 0, rely = 0, relwidth = 1, relheight = 1)
 czy_gotowy = tk.Label(ramka_startu, text = "Oceń swoje samopoczucie!")
-przycisk_start = tk.Button(ramka_startu, text = "START", command = lambda:start(ramka_startu))
+czy_gotowy.config(font=(44))
+przycisk_start = tk.Button(ramka_startu, text = "START", command = lambda:start(ramka_startu), bg="green")
+przycisk_start.config(font=(44))
 czy_gotowy.pack(fill = "both", expand = "yes")
 przycisk_start.pack(fill = "both", expand = "yes")
 
