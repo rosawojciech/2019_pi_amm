@@ -69,28 +69,37 @@ def start(ramka_startu):
             btn.config(font=30)
             btn.pack(fill = "both", expand = "yes")
     else:
-        ramka_konca = tk.Frame(okno, bd = 5)
-        ramka_konca.place(relx=0, rely = 0, relwidth = 1, relheight = 1)
+        okno.destroy()
+        nowe_okno = tk.Tk()
+        nowe_okno.geometry('600x600')
+        nowe_okno.title("Oceń swoje samopoczucie!")
+        nowe_okno.call('wm', 'iconphoto', okno._w, tk.PhotoImage(file='smiley.png'))
+        nowe_okno.configure(bg="white")
+        #canvas = tk.Canvas(nowe_okno, height = HEIGHT, width = WIDTH)
+        #canvas.pack()
         wynik = oblicz_samopoczucie()
         komunikat = "Twoje samopoczucie zostało ocenione na "+str(wynik[0])+", \nczyli powinno być "+str(wynik[1])
         
-        #fotka = tk.PhotoImage(wynik[2])
-        fotka = Image.open(wynik[2])
-        fotka = ImageTk.PhotoImage(fotka)
+        load = Image.open(wynik[2])
+        render = ImageTk.PhotoImage(load)
+        img = tk.Label(nowe_okno, image=render)
+        img.image = render
+        img.place(x=225, y=225)
+        
     
-        twoja_ocena = tk.Label(ramka_konca, text = komunikat)
+        twoja_ocena = tk.Label(nowe_okno, text = komunikat,bg = wynik[3])
         twoja_ocena.config(font=44)
-        twoja_fotka = tk.Label(ramka_konca, image = fotka)
-        twoja_ocena.pack()
-        twoja_fotka.pack()
-        wiecej_info = tk.Button(text = "Więcej informacji", command = pokaz_info)
-        wiecej_info.pack()
+        #twoja_fotka = tk.Label(nowe_okno, image = fotka)
+        twoja_ocena.place(x=100, y = 100)
+        #twoja_fotka.place(relx =0, rely = 0, relwidth =0.2)
+        wiecej_info = tk.Button(nowe_okno,text = "Więcej informacji", command = pokaz_info)
+        wiecej_info.place(x=450, y =550)
         #skala = tk.Label(ramka_konca, text = "Skala oceny od -137 do +81, \nśrednia na podstawie naszych badań to -2.61")
         #skala.config(font=22)
         #skala.pack(fill = "both", expand = "yes")
 #%%
 def pokaz_info():
-    tk.messagebox.showwarning(title="Informacje", message = "Skala oceny od -137 do +81, \nna podstawie naszych badań przeprowadzonych na grupie 240 osób \nśrednia to -2.61,\nminimum to -79, \nmaksimum to 55")
+    tk.messagebox.showwarning(title="Informacje", message = "Skala oceny od -137 do +81, na podstawie naszych badań przeprowadzonych na grupie 240 osób średnia to -2.61, minimum to -79, maksimum to 55. Dane do badania samopoczucia były zbierane na podstawie ankiety, pytania dotyczace samopoczucia pochodziły z artykułu “Skale do Pomiaru Nastroju i Sześciu Emocji” autorstwa Bogdana Wojciszke i Wiesława Baryły. Autorami badania, na podstawie którego stworzono tą aplikację, są Marcin Dziadosz, Alicja Hołowiecka i Matylda Jankowska.")
 #%%
 def wybieram(odp, ramka_pytania):
     if(odp.get() == "None"):
@@ -174,22 +183,28 @@ def oblicz_samopoczucie():
     if(samopoczucie<=-30):
         opis = "złe"
         zdjecie = "zle.png"
+        bg='red'
     elif(samopoczucie>-30 and samopoczucie<=-10):
         opis = "kiepskie"
         zdjecie = "kiepskie.png"
+        bg='orange'
     elif(samopoczucie>-10 and samopoczucie<3):
         opis = "przeciętne"
         zdjecie = "przecietne.png"
+        bg='yellow'
     elif(samopoczucie>=3 and samopoczucie<15):
         opis = "dobre"
         zdjecie = "dobre.png"
+        bg = 'pale green'
     else:
         opis = "świetne"
         zdjecie = "swietne.png"
+        bg= 'green'
     wynik = []
     wynik.append(samopoczucie)
     wynik.append(opis)
     wynik.append(zdjecie)
+    wynik.append(bg)
     return wynik
         
 
