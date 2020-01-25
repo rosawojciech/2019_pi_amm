@@ -1164,9 +1164,49 @@ mod <- lm(samopoczucie~sen+dieta+aktywnosc+urzadzenia+kontakty, data = dane_sum)
 stargazer(mod, header = F, table.placement = "H")
 ```
 
-Może uznajmy, że wszystkie zmienne są istotne statystycznie, chociaż sen jest na granicy.
+
 
 Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
+
+
+
+Wykres rzeczywistej oceny samopoczucia oraz jej oceny na podstawie modelu, dla pierwszych 30 obserwacji (na czerwono rzeczywista wartość, na czarno odpowiedź modelu):
+
+```{r wykres z modelu}
+t <- 1:nrow(dane_sum)
+
+plot(t[1:30], dane_sum$samopoczucie[1:30], col = 2, xlab = "numer obserwacji",  ylab = "ocena samopoczucia")
+odp <- predict(mod, newdata = dane_sum[1:30,3:7], type = "response")
+points(t[1:30], odp[1:30])
+```
+
+```{r tabela mod}
+tabela_mod <- cbind(t[1:30], dane_sum$samopoczucie[1:30], odp)
+tabela_mod <- as.data.frame(tabela_mod)
+colnames(tabela_mod) <- c("Numer obserwacji", "Samopoczucie", "Ocena samopoczucia z modelu")
+tabela_mod$`Błąd` <- tabela_mod$Samopoczucie-tabela_mod$`Ocena samopoczucia z modelu`
+
+```
+
+
+```{r tabelka kolory, results='asis'}
+#library(DT)
+#brks <- c(-10,10)
+#clrs <- c("red", "green", "red")
+#datatable(tabela_mod) %>% 
+#  formatStyle('Błąd', target = 'row', backgroundColor = styleInterval(brks, clrs))
+```
+
+```{r results = 'asis'}
+df<- tabela_mod
+color.me <- which(abs(df$`Błąd`) <=10)
+
+df %>% 
+  kable(booktabs = T) %>%
+  kable_styling() %>%
+  row_spec(color.me, bold = T, color = "white", background = "green")
+```
+
 
 ## Bubble chart
 
