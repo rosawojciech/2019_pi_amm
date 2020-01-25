@@ -6,6 +6,7 @@ Created on Thu Jan 23 11:44:14 2020
 """
 #%%
 import tkinter as tk
+from PIL import Image, ImageTk
 #%%
 global twoje_odp
 twoje_odp=[] #lista, w której będą zapisane odp użytkownika
@@ -71,14 +72,25 @@ def start(ramka_startu):
         ramka_konca = tk.Frame(okno, bd = 5)
         ramka_konca.place(relx=0, rely = 0, relwidth = 1, relheight = 1)
         wynik = oblicz_samopoczucie()
-        komunikat = "Twoja ocena samopoczucia to "+str(wynik)
+        komunikat = "Twoje samopoczucie zostało ocenione na "+str(wynik[0])+", \nczyli powinno być "+str(wynik[1])
+        
+        #fotka = tk.PhotoImage(wynik[2])
+        fotka = Image.open(wynik[2])
+        fotka = ImageTk.PhotoImage(fotka)
+    
         twoja_ocena = tk.Label(ramka_konca, text = komunikat)
         twoja_ocena.config(font=44)
-        twoja_ocena.pack(fill = "both", expand = "yes")
-        skala = tk.Label(ramka_konca, text = "Skala oceny od -137 do +81, \nśrednia na podstawie naszych badań to -2.61")
-        skala.config(font=22)
-        skala.pack(fill = "both", expand = "yes")
-    
+        twoja_fotka = tk.Label(ramka_konca, image = fotka)
+        twoja_ocena.pack()
+        twoja_fotka.pack()
+        wiecej_info = tk.Button(text = "Więcej informacji", command = pokaz_info)
+        wiecej_info.pack()
+        #skala = tk.Label(ramka_konca, text = "Skala oceny od -137 do +81, \nśrednia na podstawie naszych badań to -2.61")
+        #skala.config(font=22)
+        #skala.pack(fill = "both", expand = "yes")
+#%%
+def pokaz_info():
+    tk.messagebox.showwarning(title="Informacje", message = "Skala oceny od -137 do +81, \nna podstawie naszych badań przeprowadzonych na grupie 240 osób \nśrednia to -2.61,\nminimum to -79, \nmaksimum to 55")
 #%%
 def wybieram(odp, ramka_pytania):
     if(odp.get() == "None"):
@@ -157,7 +169,28 @@ def oblicz_samopoczucie():
     
     samopoczucie = round(samopoczucie, 2)
     
-    return samopoczucie
+    opis=""
+    zdjecie=""
+    if(samopoczucie<=-30):
+        opis = "złe"
+        zdjecie = "zle.png"
+    elif(samopoczucie>-30 and samopoczucie<=-10):
+        opis = "kiepskie"
+        zdjecie = "kiepskie.png"
+    elif(samopoczucie>-10 and samopoczucie<3):
+        opis = "przeciętne"
+        zdjecie = "przecietne.png"
+    elif(samopoczucie>=3 and samopoczucie<15):
+        opis = "dobre"
+        zdjecie = "dobre.png"
+    else:
+        opis = "świetne"
+        zdjecie = "swietne.png"
+    wynik = []
+    wynik.append(samopoczucie)
+    wynik.append(opis)
+    wynik.append(zdjecie)
+    return wynik
         
 
 
