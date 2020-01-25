@@ -261,7 +261,9 @@ wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokor
          method = "kendall")$estimate
 ```
 
-P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r1)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
+
+
+
 
 ### Wykresy boxplot
 ```{r hipoteza 1 boxplot}
@@ -314,7 +316,26 @@ legend("topright",
 barlabels(bar, ttab_round)
 ```
 
+```{r}
+tabela <- rbind()
+```
 
+### Wyniki testów
+
+
+
+```{r results='asis'}
+pvals <- c(wsp_kor1, r1, wsp_kor2, r2)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r1)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r2)`. Nie ma podstaw do odrzucenia hipotezy $H_0$, a więc nie istnieje istotna zależność pomiędzy poczuciem upokorzenia a jakością snu. Współczynniki korelacji dla testów `rho-Spearmana` oraz `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.5f", wsp_kor1)` oraz `r sprintf("%.5f", wsp_kor2)`, ale na poziomie istotności $\alpha = 0.05$ nie są istotne statystycznie.
 
 ## Hipoteza II
 
@@ -323,11 +344,15 @@ Badanie, czy istnieje zależność pomiędzy dietą a poczuciem radości.
 ```{r hipoteza 2 testy}
 r3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "spearman")$p.value
+wsp_kor3 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+         method = "spearman")$estimate
 r4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
          method = "kendall")$p.value
+wsp_kor4 <- cor.test(x = as.numeric(dane$dieta), y = as.numeric(dane$radosc),
+         method = "kendall")$estimate
 ```
 
-P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r3)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
+
 
 ### Wykresy boxplot
 ```{r hipoteza 2 boxplot}
@@ -375,6 +400,23 @@ legend("topright",
 barlabels(bar, ttab_round)
 ```
 
+### Wyniki testów
+
+
+
+```{r results='asis'}
+pvals <- c(wsp_kor3, r3, wsp_kor4, r4)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r3)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r4)`. Nie ma podstaw do odrzucenia $H_0$. Nie istnieje istotna zależność pomiędzy dietą a poczuciem radości.
+
 ## Hipoteza III
 
 Badanie, czy istnieje zależność pomiędzy liczbą bliskich znajomych a odczuwaniem niepokoju.
@@ -383,12 +425,18 @@ Badanie, czy istnieje zależność pomiędzy liczbą bliskich znajomych a odczuw
 r5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                y = as.numeric(dane$niepokoj),
                method = "spearman")$p.value
+wsp_kor5 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "spearman")$estimate
 r6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                y = as.numeric(dane$niepokoj),
                method = "kendall")$p.value
+wsp_kor6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
+               y = as.numeric(dane$niepokoj),
+               method = "kendall")$estimate
 ```
 
-P-value dla obu testów wynosi około $p =$ `r sprintf("%.3f", r5)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+
 
 ### Tabela kontygencji
 
@@ -437,16 +485,25 @@ wsp_kor6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                method = "kendall")$estimate
 ```
 
-Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor5` oraz `r wsp_kor6`. Interpretując te współczynniki oraz dane z wykresów, można stwierdzić, że wraz ze wzrostem liczby osób, z którymi utrzymuje się regularny kontakt, spada częstość odczuwania niepokoju.
 
 
-```{r hipoteza 3 bubble chart}
-dane %>%
-  ggplot(aes(x = liczba_osob_kontakty, y = niepokoj, size = liczba_osob_kontakty, color = niepokoj))+
-  geom_point(alpha = 0.7)
+
+### Wyniki testów
+
+```{r results='asis'}
+pvals <- c(wsp_kor5, r5, wsp_kor6, r6)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
 ```
 
-Ten bubble chart jest na razie bez sensu, wrzucam tutaj żebyśmy mieli jak to zrobić.... Nie bardzo rozumiem jak to ma być kolorowane ani od czego wielkość ma zależeć (A.)
+P-value dla obu testów wynosi około $p =$ `r sprintf("%.3f", r5)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą osób, z którymi utrzymuje się regularny kontakt a odczuwaniem niepokoju.
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.3f",wsp_kor5)` oraz `r sprintf("%.3f",wsp_kor6)`. Interpretując te współczynniki oraz dane z wykresów, można stwierdzić, że wraz ze wzrostem liczby osób, z którymi utrzymuje się regularny kontakt, spada częstość odczuwania niepokoju.
 
 ## Hipoteza IV
 
@@ -461,7 +518,7 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                method = "kendall")$p.value
 ```
 
-P-value dla obu testów są nieistotnie różne od zera ($p < 0.001***$). Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+
 
 ### Tabela kontygencji
 
@@ -509,7 +566,24 @@ wsp_kor8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                method = "kendall")$estimate
 ```
 
-Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor7` oraz `r wsp_kor8`. Wniosek: wraz ze wzrostem liczby godzin, spędzonych na korzystaniu dla rozrywki z urządzeń elektronicznych, wzrasta znacznie poczucie uzależnienia od tych urządzeń.
+### Wyniki testów
+
+```{r results='asis'}
+r7 <- "<0.001"
+r8 <- "<0.001"
+pvals <- c(round(wsp_kor7,3), r7, round(wsp_kor8,3), r8)
+#pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.3f",wsp_kor7)` oraz `r sprintf("%.3f",wsp_kor8)`. Wniosek: wraz ze wzrostem liczby godzin, spędzonych na korzystaniu dla rozrywki z urządzeń elektronicznych, wzrasta znacznie poczucie uzależnienia od tych urządzeń.
 
 ## Hipoteza V
 
@@ -524,7 +598,7 @@ r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                method = "kendall")$p.value
 ```
 
-P-value dla obu testów są nieistotnie różne od zera ($p < 0.001***$). Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+
 
 ### Tabela kontygencji
 
@@ -571,7 +645,24 @@ wsp_kor10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                method = "kendall")$estimate
 ```
 
-Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` są dość duże i wynoszą odpowiednio `r wsp_kor9` oraz `r wsp_kor10`. Im bardziej regularne są pory snu, tym lepsza jest jego jakość.
+### Wyniki testów 
+
+```{r results='asis'}
+r9 <- "<0.001"
+r10 <- "<0.001"
+pvals <- c(round(wsp_kor9,3), r9, round(wsp_kor10,3), r10)
+#pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy posiadaniem wyznaczonych pór snu a jego jakością.
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` są dość duże i wynoszą odpowiednio `r sprintf("%.3f",wsp_kor9)` oraz `r sprintf("%.3f",wsp_kor10)`. Im bardziej regularne są pory snu, tym lepsza jest jego jakość.
 
 ## Hipoteza VI
 
@@ -586,7 +677,7 @@ r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
                method = "kendall")$p.value
 ```
 
-P-value dla testu $p =$ `rho-Spearmana` wynosi `r sprintf("%.3f", r11)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+
 
 ### Tabela kontygencji
 
@@ -634,7 +725,22 @@ wsp_kor12 <- cor.test(x = as.numeric(dane$godziny_sportu),
                method = "kendall")$estimate
 ```
 
-Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r wsp_kor11` oraz `r wsp_kor12`. Im więcej godzin poświęca się tygodniowo na sport, tym rzadziej odczuwa się załamanie.
+### Wyniki testów
+
+```{r results='asis'}
+pvals <- c(wsp_kor11, r11, wsp_kor12, r12)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+P-value dla testu `rho-Spearmana` wynosi `r sprintf("%.3f", r11)`, natomiast dla testu `tau-Kendalla` wynosi  `r sprintf("%.3f", r12)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin przeznaczonych na uprawianie sportu a odczuwaniem załamania.
+
+Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.3f",wsp_kor11)` oraz `r sprintf("%.3f",wsp_kor12)`. Im więcej godzin poświęca się tygodniowo na sport, tym rzadziej odczuwa się załamanie.
 
 ## Hipoteza VII
 
@@ -649,7 +755,7 @@ r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                method = "kendall")$p.value
 ```
 
-P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r13)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r14)`$**$. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+
 
 ### Tabela kontygencji
 
@@ -696,7 +802,22 @@ wsp_kor14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                method = "kendall")$estimate
 ```
 
-Zarówno współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszące odpowiednio `r wsp_kor13` oraz `r wsp_kor14`, jak i wykresy słupkowe jasno wskazują na istotną zależność pomiędzy badanymi zmiennymi. Im większe znaczenie ma jakość spożywanych posiłków, tym lepszy humor się odczuwa.
+### Wyniki testów
+
+```{r results='asis'}
+pvals <- c(wsp_kor13, r13, wsp_kor14, r14)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+P-value dla testu `rho-Spearmana` wynosi $p =$ `r sprintf("%.3f", r13)`, natomiast dla testu `tau-Kendalla` wynosi $p =$ `r sprintf("%.3f", r14)`. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy jakością posiłków a dobrym humorem.
+
+Zarówno współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszące odpowiednio `r sprintf("%.3f",wsp_kor13)` oraz `r sprintf("%.3f",wsp_kor14)`, jak i wykresy słupkowe jasno wskazują na istotną zależność pomiędzy badanymi zmiennymi. Im większe znaczenie ma jakość spożywanych posiłków, tym lepszy humor się odczuwa.
 
 ## Hipoteza VIII
 
@@ -725,7 +846,7 @@ boxplot(dane$ocena_samop_ogolna~dane$plec)
 
 ```
 
-### Badanie zależności
+### Wyniki testów
 
 ```{r hipoteza 8 shapiro}
 shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
@@ -742,7 +863,7 @@ pval <- wilcox.test(ocena_samop_ogolna~plec, data = dane)$p.value
 ```
 
 
-P-value z testu Manna - Whitney'a - Wilcoxona wynosi $p =$ `r sprintf("%.3f", pval)` $**$. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
+P-value z testu Manna - Whitney'a - Wilcoxona wynosi $p =$ `r sprintf("%.3f", pval)`. Istnieje zależność pomiędzy płcią a ogólną oceną samopoczucia.
 
 ## Hipoteza IX
 
@@ -755,25 +876,40 @@ pval <- kruskal.test(ocena_samop_ogolna~wiek, data = dane)$p.value
 P-value wynosi około 0.063, więc decyzja jest niejednoznaczna, ale na wybranym przez nas poziomie istotności 0.05 nie ma podstaw do odrzucenia hipotezy zerowej.
 
 ```{r hipoteza 9  testy}
-r11 <- cor.test(x = dane$wiek,
+r15 <- cor.test(x = dane$wiek,
                y = dane$ocena_samop_ogolna,
                method = "spearman")$p.value
-r12 <- cor.test(x = dane$wiek,
+r16 <- cor.test(x = dane$wiek,
                y = dane$ocena_samop_ogolna,
                method = "kendall")$p.value
 ```
 
 
-Testy Spearmana oraz Kendalla jednoznacznie wskazują, że należy odrzucić hipotezę zerową (p-value odpowiednio 0.008 oraz 0.01).
+
 
 ```{r hipoteza 9 korelacje}
-r11 <- cor.test(x = dane$wiek,
+wsp_kor15 <- cor.test(x = dane$wiek,
                y = dane$ocena_samop_ogolna,
                method = "spearman")$estimate
-r12 <- cor.test(x = dane$wiek,
+wsp_kor16 <- cor.test(x = dane$wiek,
                y = dane$ocena_samop_ogolna,
                method = "kendall")$estimate
 ```
+
+
+
+```{r results='asis'}
+pvals <- c(wsp_kor15, r15, wsp_kor16, r16)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+Testy Spearmana oraz Kendalla jednoznacznie wskazują, że należy odrzucić hipotezę zerową (p-value odpowiednio 0.008 oraz 0.01).
 
 Współczynniki korelacji z tych testów wynoszą odpowiednio 0.172 i 0.119, zatem wzrost wieku powoduje wzrost oceny ogólnej samopoczucia.
 
@@ -900,6 +1036,17 @@ wsp_kor2 <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samop
          method = "kendall")$estimate
 ```
 
+```{r results='asis'}
+pvals <- c(round(wsp_kor1,3), "<0.001", round(wsp_kor2,3), "<0.001")
+#pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
 Z testów Kendalla oraz Spearmana otrzymujemy p-value praktycznie równe zero. Oznacza to, że zależność pomiędzy snem a samopoczuciem jest istotna statystycznie. Współczynniki korelacji wynoszą 0.261 dla Spearmana i 0.191 dla Kendalla. Oznacza to, że im lepiej śpimy, tym lepsze samopoczucie mamy :)
 
 ## Dieta a samopoczucie
@@ -914,6 +1061,18 @@ r4 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczu
 wsp_kor4 <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
          method = "kendall")$estimate
 ```
+
+```{r results='asis'}
+pvals <- c(round(wsp_kor3,3), "<0.001", round(wsp_kor4,3), "<0.001")
+#pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
 Z testów Spearmana oraz Kendalla otrzymujemy p-value praktycznie równe zero. Istnieje zależność pomiędzy dietą a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.322 dla Spearmana oraz 0.232 dla Kendalla. Im lepsza jakość naszej diety, tym lepsze  nasze samopoczucie :)
 
 ## Aktywność a samopoczucie
@@ -930,7 +1089,18 @@ wsp_kor6 <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum
          method = "kendall")$estimate
 ```
 
-Z testów Spearmana oraz Kendalla otrzymujemy p-value około 0.01, co pozwala odrzucić hipotezę zerową o braku zależności. Współczynniki korelacji wynoszą odpowiednio 0.163 dla Spearmana i 0.116 dla Kendalla. Im więcej mamy aktywności, tym lepsze nasze samopoczucie :)
+```{r results='asis'}
+pvals <- c(wsp_kor5, r5, wsp_kor6, r6)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
+
+Z testów Spearmana oraz Kendalla otrzymujemy p-value około 0.011, co pozwala odrzucić hipotezę zerową o braku zależności. Współczynniki korelacji wynoszą odpowiednio 0.163 dla Spearmana i 0.116 dla Kendalla. Im więcej mamy aktywności, tym lepsze nasze samopoczucie :)
 
 ## Urządzenia a samopoczucie
 
@@ -944,8 +1114,18 @@ r8 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samo
 wsp_kor8 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
          method = "kendall")$estimate
 ```
+```{r results='asis'}
+pvals <- c(wsp_kor7, r7, wsp_kor8, r8)
+pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
 
-P-value z testów Spearmana oraz Kendalla wynoszą około 0.01, a więc odrzucamy hipotezę o braku zależności. Współczynniki korelacji wynoszą odpowiednio -0.162 dla Spearmana oraz -0.115 dla Kendalla. Im więcej korzystamy z urządzeń elektronicznych, tym gorsze nasze samopoczucie :( Moje na przykład pogorszyło się podczas robienia tego projektu.
+```
+
+P-value z testów Spearmana oraz Kendalla wynoszą około 0.012, a więc odrzucamy hipotezę o braku zależności. Współczynniki korelacji wynoszą odpowiednio -0.162 dla Spearmana oraz -0.115 dla Kendalla. Im więcej korzystamy z urządzeń elektronicznych, tym gorsze nasze samopoczucie :( Moje na przykład pogorszyło się podczas robienia tego projektu.
 
 ## Kontakty a samopoczucie
 
@@ -959,6 +1139,16 @@ r10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samop
 wsp_kor10 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
          method = "kendall")$estimate
 ```
+```{r results='asis'}
+pvals <- c(round(wsp_kor9,3), "<0.001", round(wsp_kor10,3), "<0.001")
+#pvals <- round(pvals,3)
+pvals <- rbind(c("współczynnik korelacji", "p-value", "współczynnik korelacji", "p-value"),pvals)
+rownames(pvals) <- c("","")
+colnames(pvals) <- c("test rho-Spearmana","", "test tau-Kendalla", "")
+kable(pvals)%>%
+  kable_styling(full_width = T)
+
+```
 
 P-value z obu testów są praktycznie równe zero. Istnieje zależność pomiędzy kontaktami towarzyskimi a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.455 dla Spearmana i 0.329 dla Kendalla.
 Im lepsze nasze kontakty towarzyskie, tym lepsze nasze samopoczucie :)
@@ -968,8 +1158,12 @@ Im lepsze nasze kontakty towarzyskie, tym lepsze nasze samopoczucie :)
 
 ```{r mały modelik liniowy}
 mod <- lm(samopoczucie~sen+dieta+aktywnosc+urzadzenia+kontakty, data = dane_sum)
-summary(mod)
 ```
+
+```{r results = 'asis'}
+stargazer(mod, header = F, table.placement = "H")
+```
+
 Może uznajmy, że wszystkie zmienne są istotne statystycznie, chociaż sen jest na granicy.
 
 Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
@@ -983,15 +1177,15 @@ bubble <- dane_sum %>%
 bubble
 ```
 
-\newpage
 
-## Infografika
 
-![width=400px](infografika.png){Wpływ badanych czynników na samopoczucie. Pod czynnikiem podany współczynnik korelacji (na tle zielonym dodatnia, na czerwonym ujemna)}
 
-\newpage
+
+
 
 # Wnioski
+
+## Wnioski z bardziej szczegółowych hipotez
 
 Wykazaliśmy następujące związki:
 
@@ -1005,7 +1199,6 @@ Wykazaliśmy następujące związki:
 
 - im większą wagę ktoś przywiązuje do jakości swoich posiłków, tym lepszy ma humor
 
-- zależność między wiekiem a samopoczuciem można opisać modelem liniowym
 
 Wykazaliśmy także, że nie zachodzą związki:
 
@@ -1017,6 +1210,20 @@ Wykazaliśmy także, że nie zachodzą związki:
 Porównując wyniki w różnych podgrupach, odkryliśmy, że:
 
 - średnia ocena ogólna samopoczucia różniła się między grupą kobiet a mężczyzn, w dodatku była znacznie niższa (-8) w grupie kobiet niż mężczyzn (3.2)
+
+- wiek ma wpływ na samopoczucie, ale zaproponowane przez nas grupy wiekowe (poniżej 21  lat, 21-24 i powyżej 24 lat) nie różnicują istotnie samopoczucia
+
+## Wnioski dla pięciu głównych czynników 
+
+Na następnej stronie znajduje się infografika przedstawiająca czynniki, które mają wpływ na nasze samopoczucie. Pod nazwą czynnika została podana przybliżona wartość współczynnika korelacji. Na zielonym tle są podane korelacje dodatnie, a na czerwonym ujemne.
+
+Ta infografika jest skrótowym przedstawieniem wniosków, jakie dostaliśmy przy badaniu pięciu wybranych przez nas czynników wpływających na samopoczucie.
+
+\newpage
+
+![](infografika.png)
+
+\newpage
 
 
 # Bibliografia
