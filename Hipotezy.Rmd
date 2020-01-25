@@ -56,7 +56,7 @@ Celem naszego projektu jest analiza statystyczna wpływu różnych czynników na
 
 Dane zebraliśmy na podstawie ankiety. Pytania dotyczące emocji pochodzą z artykułu "Skale do Pomiaru Nastroju i Sześciu Emocji" autorstwa Bogdana Wojciszke i Wiesława Baryły. Pozostałe pytania są naszego autorstwa. Ankietę stworzyliśmy za pomocą Formularzy Google i rozesłaliśmy respondentom drogą internetową.
 
-Przebadana przez nas grupa składała się z 240 osób. Spośród nich 48.3% było kobietami (a zatem 51.7% było mężczyznami, bo nie daliśmy do wyboru opcji typu "nie wiem, jakiej płci jestem"). Większość osób (trochę ponad połowa) było w wieku co najwyżej 23 lat (w tym aż 30% w wieku 21 lat).
+Przebadana przez nas grupa składała się z 240 osób. Spośród nich 48.3% było kobietami, a 51.7% było mężczyznami. Większość osób (trochę ponad połowa) było w wieku co najwyżej 23 lat (w tym aż 30% w wieku 21 lat).
 
 Pierwsze 10 pytań były to zdania dotyczące aktualnego samopoczucia. Należało ocenić w skali od 1 do 5, jak bardzo zgadzasz się z danym twierdzeniem. Po nich następowały 24 uczucia takie jak radość, złość, depresja itp. Należało ocenić w skali od 1 do 7 (od "nigdy" do "zawsze") jak często odczuwasz daną emocję.
 
@@ -464,7 +464,7 @@ ttab_round <- round(ttab,2)
 bar <- barplot(ttab,
         main = "Odczuwanie niepokoju, w zależności od liczby bliskich znajomych",
         xlab="Liczba osób, z którymi utrzymuje się regularny kontakt",
-        ylab="Procentowy rozkład poczucia radości",
+        ylab="Procentowy rozkład poczucia niepokoju",
         col=colf(7),
         names.arg = c("0", "1", "2-3","4-5", "więcej niż 5"))
 legend("topright",
@@ -1153,10 +1153,10 @@ kable(pvals)%>%
 P-value z obu testów są praktycznie równe zero. Istnieje zależność pomiędzy kontaktami towarzyskimi a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.455 dla Spearmana i 0.329 dla Kendalla.
 Im lepsze nasze kontakty towarzyskie, tym lepsze nasze samopoczucie :)
 
-## Modelik
+## Model
 
 
-```{r mały modelik liniowy}
+```{r mały model liniowy}
 mod <- lm(samopoczucie~sen+dieta+aktywnosc+urzadzenia+kontakty, data = dane_sum)
 ```
 
@@ -1168,7 +1168,7 @@ Może uznajmy, że wszystkie zmienne są istotne statystycznie, chociaż sen jes
 
 Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
 
-## Taki tam bubble chart
+## Bubble chart
 
 ```{r sumowanie danych bubble chart}
 bubble <- dane_sum %>%
@@ -1176,10 +1176,6 @@ bubble <- dane_sum %>%
   geom_point()
 bubble
 ```
-
-
-
-
 
 
 
@@ -1211,7 +1207,7 @@ Porównując wyniki w różnych podgrupach, odkryliśmy, że:
 
 - średnia ocena ogólna samopoczucia różniła się między grupą kobiet a mężczyzn, w dodatku była znacznie niższa (-8) w grupie kobiet niż mężczyzn (3.2)
 
-- wiek ma wpływ na samopoczucie, ale zaproponowane przez nas grupy wiekowe (poniżej 21  lat, 21-24 i powyżej 24 lat) nie różnicują istotnie samopoczucia
+- wiek ma wpływ na samopoczucie, ale zaproponowane przez nas grupy wiekowe (poniżej 21 lat, 21-24 i powyżej 24 lat) nie różnicują istotnie samopoczucia
 
 ## Wnioski dla pięciu głównych czynników 
 
@@ -1227,9 +1223,6 @@ Ta infografika jest skrótowym przedstawieniem wniosków, jakie dostaliśmy przy
 
 
 # Bibliografia
-
-
-
 
 [@nastroj]
 [@testy]
