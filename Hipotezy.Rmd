@@ -853,7 +853,7 @@ shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
 
 ```
 
-P-value z testu Shapio-Wilka dla cechy Ogólna ocena samopoczucia wynosi $p =$ `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
+P-value z testu Shapiro-Wilka dla cechy Ogólna ocena samopoczucia wynosi $p =$ `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
 
 
 
