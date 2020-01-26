@@ -99,6 +99,7 @@ mindane <- NULL
 maxdane <- NULL
 mediadane <- NULL
 srdane <- NULL
+sddane <- NULL
 normalnosc <- rep(0, ncol(dane)-1)
 shapiro <- NULL
 #zaczynamy od drugiej kolumny bo pierwsza to płeć
@@ -107,6 +108,7 @@ for( i in 2:ncol(dane)){
   maxdane <- c(maxdane,max(as.numeric(dane[, i])))
   mediadane <- c(mediadane,median(as.numeric(dane[, i])))
   srdane <- c(srdane, round(mean(as.numeric(dane[,i])),2))
+  sddane <- c(sddane, sprintf("%.2f",sd(as.numeric(dane[,i]))))
   shapiro <- c(shapiro, shapiro.test(as.numeric(dane[, i]))$p.value)
 }
 for (i in 1:length(shapiro)){
@@ -148,7 +150,7 @@ labelki <- c( "Wiek", "Jestem w złym humorze", "Czuję się świetnie",
 ```
 
 ```{r tabelka}
-tabela_cala <- cbind(labelki,mindane, mediadane,srdane, maxdane, normalnosc)
+tabela_cala <- cbind(labelki,mindane, mediadane,srdane, sddane, maxdane, normalnosc)
 #tabela_cala <- as.tabular(tabela_cala)
 tabela_cala1 <- tabela_cala[1,]
 tabela_cala2 <- tabela_cala[2:11,]
@@ -161,21 +163,21 @@ tabela_cala8 <- tabela_cala[48:51,]
 ```
 
 ```{r tabelka cała 1 kable, results='asis'}
-#kable(tabela_cala1, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+#kable(tabela_cala1, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład istotnie różni się od rozkładu normalnego?")) %>%
 #   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
 Pytania dotyczące aktualnego nastroju były oceniane 5-cio stopniową skalą. Wartości 1-5 oznaczały odpowiednio: "1 - nie zgadzam się", "2 - raczej się nie zgadzam", "3 - trochę tak, trochę nie", "4 - raczej się zgadzam", "5 - zgadzam się".
 
 ```{r tabelka cała 2 kable, results='asis'}
-kable(tabela_cala2, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala2, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
 Przy ocenie częstości odczuwania poszczególnych emocji, do wyboru były odpowiedzi oceniane w skali 7-mio stopniowej. Oznaczały odpowiednio: "1 - nigdy", "2 - bardzo rzadko", "3 - rzadko", "4 - czasami", "5 - często", "6 - bardzo często", "7 - zawsze".
 
 ```{r tabelka cała 3 kable, results='asis'}
-kable(tabela_cala3, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala3, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
@@ -186,7 +188,7 @@ Pytania dotyczące snu oceniane były w skali 5-cio stopniowej. Wartości w pyta
 - oceny jakości snu określały: "1 - bardzo zła jakość" do "5 - bardzo dobra jakość".
 
 ```{r tabelka cała 4 kable, results='asis'}
-kable(tabela_cala4, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala4, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
@@ -197,7 +199,7 @@ Pytania dotyczące sportu oceniane były w skali 5-cio stopniowej. Wartości w p
 - oceny własnej kondyncji fizycznej określały: "1 - bardzo zła" do "5 - bardzo dobra".
 
 ```{r tabelka cała 5 kable, results='asis'}
-kable(tabela_cala5, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala5, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
@@ -209,7 +211,7 @@ Pytania dotyczące korzystania z urządzeń elektronicznych oceniane były w ska
 - częstości występowania poczucia uzależnienia od u.e. oznaczały: "1 - nigdy", "2 - rzadko", "3 - czasami", "4 - często", "5 - bardzo często".
 
 ```{r tabelka cała 6 kable, results='asis'}
-kable(tabela_cala6, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala6, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
@@ -220,7 +222,7 @@ Pytania dotyczące diety oceniane były w skali 5-cio stopniowej. Wartości w py
 - regularności spożywanych posiłków oznaczały: "1 - jem nieregularnie", "2 - różnie z tym bywa", "3 - staram się jeść regularnie", "4 - zazwyczaj jem regularnie", "5 - mam stałe pory posiłków".
 
 ```{r tabelka cała 7 kable, results='asis'}
-kable(tabela_cala7, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala7, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
@@ -231,7 +233,7 @@ Pytania dotyczące kontaktów towarzyskich oceniane były w skali 5-cio stopniow
 - znaczenia, jakie mają dla ankietowanego kontakty z innymi ludźmi oznaczały "1 - brak znaczenia" do "5 - bardzo duże znaczenie".
 
 ```{r tabelka cała 8 kable, results='asis'}
-kable(tabela_cala8, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Maksimum", "Czy rozkład jest normalny?")) %>%
+kable(tabela_cala8, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
    kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
 ```
 
