@@ -266,8 +266,10 @@ wsp_kor2 <- cor.test(x = as.numeric(dane$jakosc_snu), y = as.numeric(dane$upokor
 
 
 
-
 ### Wykresy boxplot
+
+
+
 ```{r hipoteza 1 boxplot}
 par(mfrow=c(1,2))
 boxplot(as.numeric(dane$upokorzenie), main = "Poczucie upokorzenia",ylab = "poziomy")
@@ -275,6 +277,22 @@ boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
 
+```{r}
+upokorzenie <- tabela_cala[18,]
+jakosc <- tabela_cala[38,]
+minitab <- rbind(upokorzenie, jakosc)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+ Upokorzenie było oceniane w skali od 1 do 7 (odczuwanie od "nigdy" do "zawsze"). Jak widać z wykresu boxplot, większość respondentów nie odczuwa upokorzenia nigdy, lub odczuwa je bardzo rzadko lub rzadko, gdzie "bardzo rzadko" jest medianą. Pojawił się co najmniej jeden element odstajacy - osoby odczuwające upokorzenie zawsze.
+ 
+ Jakość snu była oceniona w skali od 1 do 5 (od najgorszej do najlepszej). Jakość snu była oceniana głównie na 3 lub 4, gdzie 3 jest medianą. Pojawiały się elementy odstające - osoby, które oceniły swoją jakość snu na 1.
 
 ### Tabela kontygencji
 
@@ -364,6 +382,36 @@ boxplot(as.numeric(dane$radosc), main = "Poczucie radości", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
 
+```{r}
+skladnik_diety <- tabela_cala[45,]
+radosc <- tabela_cala[12,]
+minitab <- rbind(skladnik_diety, radosc)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+Dieta (a właściwie jej przeważający składnik) była oceniana w skali od 1 do 5, z następujaco uszeregowanymi wartościami: 
+- 1 - fast food
+
+- 2 - żywność mrożona, produkty mocno przetworzone
+
+- 3 - mięso i potrawy ciężkostrawne
+
+- 4 - dieta wegetariańska
+
+- 5 - dieta zbilansowana
+
+Większość ocen wahała się od 3 do 5, gdzie 5 było medianą.
+
+Odczuwanie radości było oceniane w skali od 1 do 7 ("nigdy" do "zawsze"). Oceny wahały się między 4 a 6, gdzie 5 jest medianą.
+
+
+
 ### Tabela kontygencji
 
 ```{r hipoteza 2 tabelka}
@@ -438,7 +486,44 @@ wsp_kor6 <- cor.test(x = as.numeric(dane$liczba_osob_kontakty),
                method = "kendall")$estimate
 ```
 
+### Wykresy boxplot
 
+```{r}
+
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$liczba_osob_kontakty), main = "Liczba bliskich znajomych",ylab = "poziomy")
+boxplot(as.numeric(dane$niepokoj), main = "Poczucie niepokoju", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+```{r}
+znajomi <- tabela_cala[49,]
+niepokoj <- tabela_cala[13,]
+minitab <- rbind(znajomi, niepokoj)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+Liczba bliskich znajomych była oceniana od 1 do 5 z kolejnymi poziomami:
+
+- 1 -brak bliskich znajomych
+
+- 2 - 1 do 2 bliskich osób
+
+- 3 - 2-3 takich osób
+
+- 4 - 4-5 osób
+
+- 5 - więcej niż 5 bliskich znajomych
+
+Najwięcej ocen było pomiędzy 3 a 5, gdzie 4 jest medianą.
+
+Poczucie niepokoju było oceniane w skali 1 do 7 ("nigdy" do "zawsze"). Najwięcej ocen było pomiędzy 3 a 5, gdzie 4 jest medianą.
 
 ### Tabela kontygencji
 
@@ -534,6 +619,45 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
                y = as.numeric(dane$poczucie_uzaleznienia_urzadzenia),
                method = "kendall")$p.value
 ```
+
+### Wykresy boxplot
+
+```{r}
+
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$godziny_rozrywki_urzadzenia), main = "Liczba godzin spędzonych na \nkomputerze w celach rozrywkowych",ylab = "poziomy")
+boxplot(as.numeric(dane$poczucie_uzaleznienia_urzadzenia), main = "Poczucie uzależnienia od urządzeń", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+```{r}
+godziny_kompa <- tabela_cala[43,]
+addicted <- tabela_cala[44,]
+minitab <- rbind(upokorzenie, jakosc)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+Liczba godzin spędzonych na urządzeniach w celu rozrywki była oceniana w skali od 1 do 5 gdzie:
+
+- 1 - mniej niż 1h
+
+- 2 - od 1 do 2h
+
+- 3 - od 2 do 3h
+
+- 4 - od 3 do 4h
+
+- 5 - powyżej 4h
+
+Najwięcej ocen pojawiało się między 2 a 4, gdzie 3 to mediana.
+
+Poczucie uzależnienia było oceniane od 1 do 5 ("nigdy" do "zawsze"). Najwięcej ocen pojawiało się od 3 do 4 gdzie 3 to mediana. Pojawiały się elementy odstające - osoby, które nigdy nie czują się uzależnione.
 
 
 
@@ -632,7 +756,32 @@ r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
                method = "kendall")$p.value
 ```
 
+### Wykresy boxplot
 
+```{r}
+
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$wyzn_pory_snu), main = "Posiadanie wyznaczonych pór snu",ylab = "poziomy")
+boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+```{r}
+wyzn <- tabela_cala[37,]
+jakosc <- tabela_cala[38,]
+minitab <- rbind(wyzn, jakosc)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+Posiadanie wyznaczonych pór snu było oceniane od 1 do 5 ("nie" do "tak"). Najwięcej ocen było od 2 do 5, gdzie 3 to mediana.
+
+Jakość snu była oceniana w skali od 1 do 5 (od najgorszej do najlepszej). Najwięcej ocen było od 3 do 4, gdzie 3 to mediana. Pojawiały się elementy odstające - osoby, które swoją jakość snu oceniły na 1.
 
 ### Tabela kontygencji
 
@@ -711,7 +860,44 @@ r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
                method = "kendall")$p.value
 ```
 
+### Wykresy boxplot
 
+```{r}
+
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$godziny_sportu), main = "Liczba godzin poświęcanych na sport",ylab = "poziomy")
+boxplot(as.numeric(dane$zalamanie), main = "Poczucie załamania", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+```{r}
+sport <- tabela_cala[39,]
+zalamka <- tabela_cala[25,]
+minitab <- rbind(sport, zalamka)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+Liczba godzin poświęcanych tygodniowo na sport była oceniona w skali od 1 do 5. Liczby godzin poświęconych tygodniowo na sport oznaczały: 
+
+- 1 - nie uprawiam żadnego sportu
+
+- 2 - mniej niż 1h
+
+- 3 - 1-2,5h
+
+- 4 - 2,5-4h
+
+- 5 - więcej niż 4h
+
+Najwięcej ocen pojawiało się od 2 do 4, gdzie 3 to mediana.
+
+Poczucie załamania było oceniane w skali od 1 do 7 (nigdy do zawsze). Najwięcej ocen pojawiało się od 1 do 4, gdzie 2 to mediana.
 
 ### Tabela kontygencji
 
@@ -789,6 +975,31 @@ r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
                method = "kendall")$p.value
 ```
 
+```{r}
+
+par(mfrow=c(1,2))
+boxplot(as.numeric(dane$jakosc_posilkow), main = "Jakość posiłkóW",ylab = "poziomy")
+boxplot(as.numeric(dane$dobry_humor), main = "Dobry humor", ylab = "poziomy")
+par(mfrow=c(1,1))
+```
+
+```{r}
+haha <- tabela_cala[7,]
+jakosc <- tabela_cala[46,]
+minitab <- rbind(haha, jakosc)
+rownames(minitab) <- NULL
+```
+
+
+```{r results='asis'}
+kable(minitab, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
+```
+
+Jakość posiłków była oceniana w skali od 1 do 5 (od najgorszej do najlepszej). Najwięcej ocen pojawiało się między 3 a 4, gdzie 3 to mediana. Osoby, które oceniły jakość swoich posiłków na 1, są na wykresie zaznaczone jako element odstajacy.
+
+
+Dobry humor był oceniany w skali od 1 do 5 (najrzadziej do najczęściej odczuwany). Najwięcej ocen jest pomiędzy 3 a 5, gdzie 4 to mediana.
 
 
 ### Tabela kontygencji
@@ -879,6 +1090,37 @@ tabelka <- tabular((`Ogólna ocena samopoczucia` = dane$ocena_samop_ogolna)~  Fo
 boxplot(dane$ocena_samop_ogolna~dane$plec, xlab = "Płeć", ylab = "Ocena samopoczucia",
         main = "Ogólna ocena samopoczucia \n podzielona ze względu na płeć")
 ```
+
+```{r}
+kobiety <- subset(dane, subset = (dane$plec=="kobieta"))
+mezczyzny <- subset(dane, subset=(dane$plec == "mężczyzna"))
+sr_kobiety <- mean(kobiety$ocena_samop_ogolna)
+sr_mezczyzny <- mean(mezczyzny$ocena_samop_ogolna)
+min_kobiety <- min(kobiety$ocena_samop_ogolna)
+min_mezczyzny <- min(mezczyzny$ocena_samop_ogolna)
+max_kobiety <- max(kobiety$ocena_samop_ogolna)
+max_mezczyzny <- max(mezczyzny$ocena_samop_ogolna)
+sd_kobiety <- sd(kobiety$ocena_samop_ogolna)
+sd_mezczyzny <- sd(mezczyzny$ocena_samop_ogolna)
+median_kobiety <- median(kobiety$ocena_samop_ogolna)
+median_mezczyzny <- median(mezczyzny$ocena_samop_ogolna)
+shapiro_kobiety <- round(shapiro.test(kobiety$ocena_samop_ogolna)$p.value,3)
+shapiro_mezczyzny <- round(shapiro.test(mezczyzny$ocena_samop_ogolna)$p.value,3)
+```
+
+```{r}
+tabela <- cbind(c(min_kobiety, min_mezczyzny), c(median_kobiety, median_mezczyzny),c(sr_kobiety, sr_mezczyzny), c(sd_kobiety, sd_mezczyzny),c(max_kobiety, max_mezczyzny), c(shapiro_kobiety, shapiro_mezczyzny))
+tabela <- round(tabela, 3)
+tabela[1,1] <- "-79"
+colnames(tabela) <- c("Minimun", "Mediana", "Średnia", "Odchylenie standardowe", "Maksimum", "P-value z testu Shapiro-Wilka" )
+rownames(tabela) <- c("Kobiety", "Mężczyźni")
+```
+
+```{r results = 'asis'}
+kable(tabela) %>%
+  kable_styling(full_width = T)
+```
+
 
 Z wykresu `ramka-wąsy` można wyczytać, że wyniki u kobiet były o wiele bardziej zróżnicowane - "wąsy", wskazujące na najwyższy i najniższy wynik, niebędący obserwacją odstającą, są znacząco dłuższe, niż w przypadku wykresu dla mężczyzn. Również mediana na pierwszym wykresie jest niżej (poniżej zera). Możliwe jest również, że rozkład gęstości samopoczucia u kobiet charakteryzowałby się asymetrią.
 
@@ -1003,10 +1245,13 @@ dane %>%
   ggboxplot(x = "wiek_kat", y = "ocena_samop_ogolna", fill = "wiek_kat")
 ```
 
-```{r hipoteza 10 anova}
+```{r hipoteza 10 anova, results='asis'}
 mod <- aov(ocena_samop_ogolna~wiek_kat, data = dane)
-summary(mod)
+summary <- summary(mod)
+
 ```
+
+
 
 
 Z wykresu boxplot można przypuszczać, że raczej nie ma bardzo istotnych różnic pomiędzy grupami.
@@ -1078,7 +1323,7 @@ kable(tabela_cala)%>%
 
 ```{r sumowanie danych boxplot}
 boxplot(dane_sum$sen, dane_sum$dieta, dane_sum$aktywnosc, dane_sum$urzadzenia, dane_sum$kontakty,
-        names = c("Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty"),col = "pink")
+        names = c("Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty"))
 ```
 Z wykresu boxplot widać, że najlepsze oceny pojawiały się w kategorii Kontakty. W przypadku pozostałych czynników, oceny są na podobnym poziomie, z medianami pomiędzy 8 a 10.
 
@@ -1135,7 +1380,7 @@ kable(pvals)%>%
 
 Z testów Spearmana oraz Kendalla otrzymujemy p-value praktycznie równe zero. Istnieje zależność pomiędzy dietą a samopoczuciem. Współczynniki korelacji wynoszą odpowiednio 0.322 dla Spearmana oraz 0.232 dla Kendalla. Im lepsza jakość naszej diety, tym lepsze  nasze samopoczucie :)
 
-## Aktywność a samopoczucie
+## Aktywność fizyczna a samopoczucie
 
 
 ```{r aktywność a samopoczucie testy}
@@ -1162,7 +1407,7 @@ kable(pvals)%>%
 
 Z testów Spearmana oraz Kendalla otrzymujemy p-value około 0.011, co pozwala odrzucić hipotezę zerową o braku zależności. Współczynniki korelacji wynoszą odpowiednio 0.163 dla Spearmana i 0.116 dla Kendalla. Im więcej mamy aktywności, tym lepsze nasze samopoczucie :)
 
-## Urządzenia a samopoczucie
+## Urządzenia elektroniczne a samopoczucie
 
 ```{r urządzenia a samopoczucie testy}
 r7 <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
@@ -1187,7 +1432,7 @@ kable(pvals)%>%
 
 P-value z testów Spearmana oraz Kendalla wynoszą około 0.012, a więc odrzucamy hipotezę o braku zależności. Współczynniki korelacji wynoszą odpowiednio -0.162 dla Spearmana oraz -0.115 dla Kendalla. Im więcej korzystamy z urządzeń elektronicznych, tym gorsze nasze samopoczucie :( Moje na przykład pogorszyło się podczas robienia tego projektu.
 
-## Kontakty a samopoczucie
+## Kontakty towarzyskie a samopoczucie
 
 ```{r kontakty a samopoczucie}
 r9 <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
@@ -1226,9 +1471,14 @@ stargazer(mod, header = F, table.placement = "H")
 
 
 
+
+
+Stworzyliśmy aplikację okienkową w języku `Python`, w której można wypełnić 15 pytań z naszej ankiety, dotyczących snu, aktywności fizycznej, korzystania z urządzeń elektronicznych, diety oraz kontaktów fizycznych. Na podstawie odpowiedzi użytkownika oraz wyestymowanego przed chwilą modelu, aplikacja wysnuwa przypuszczenie, jakie wg modelu powinno być samopoczucie użytkownika. 
+
 Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnisz ankietę na temat 5 czynników :)
 
 
+Sprawdzimy, jak spisuje się model na naszych danych.
 
 Wykres rzeczywistej oceny samopoczucia oraz jej oceny na podstawie modelu, dla pierwszych 30 obserwacji (na czerwono rzeczywista wartość, na czarno odpowiedź modelu):
 
@@ -1264,18 +1514,10 @@ color.me <- which(abs(df$`Błąd`) <=10)
 df %>% 
   kable(booktabs = T) %>%
   kable_styling() %>%
-  row_spec(color.me, bold = T, color = "white", background = "green")
+  row_spec(color.me, bold = T, color = "black", background = "green")
 ```
 
 
-## Bubble chart
-
-```{r sumowanie danych bubble chart}
-bubble <- dane_sum %>%
-  ggplot(aes(x = kontakty, y = samopoczucie, size = urzadzenia, color = aktywnosc))+
-  geom_point()
-bubble
-```
 
 
 ## Korelacje (wg testu Spearmana)
@@ -1402,6 +1644,21 @@ Z istotnych statystycznie korelacji mamy zatem:
 Blisko istotności znalazła się także korelacja międy snem a korzystaniem z urządzeń -0.112 z p-value 0.085.
 
 Poza tym istotne są wszystkie korelacje związane z samopoczuciem, co zostało wykazane wcześniej zarówno za pomocą testów Spearmana jak i Kendalla.
+
+## Bubble chart
+
+```{r sumowanie danych bubble chart}
+bubble <- dane_sum %>%
+  ggplot(aes(x = kontakty, y = samopoczucie, size = urzadzenia, color = aktywnosc))+
+  geom_point()
+bubble
+```
+
+Wykres ten przedstawia zależność samopoczucia od kontaktów towarzyskich (zaznaczone na osiach x i y). Zgodnie z wcześniejszymi wnioskami, im więcej mamy kontaktu towarzyskiego, tym lepsze nasze samopoczucie. Widać, że dla osób, które dostały ocenę za 'Kontakty' 5, 6 lub 7, samopoczucie było ujemne (poniżej średniej, która wynosiła -2.61). Dopiero przy ocenie za 'Kontakty' 8 pojawiają się oceny dodatnie samopoczucia. Dla osób, które ocenę za kontakty miały w okolicach 13-15, ocena samopoczucia sięgała nawet 50 (maksimum wynosiło 55).
+
+Im jaśniejsza jest kropka, tym lepsza ocena za aktywność wystąpiła, z kolei im większa kropka, tym wyższa ocena za urządzenia.
+
+Nie widać tutaj wyraźnej zależności, ale można zauważyć, że w okolicy średniej oceny za kontakty, oceny za aktywność i urządzenia także są średnie, bo kropki są i średniej wielkości i pośredniego koloru.
 
 # Wnioski
 
