@@ -876,9 +876,28 @@ tabelka <- tabular((`Ogólna ocena samopoczucia` = dane$ocena_samop_ogolna)~  Fo
 ### Wykres boxplot
 
 ```{r hipoteza 8 boxplot}
-boxplot(dane$ocena_samop_ogolna~dane$plec)
-
+boxplot(dane$ocena_samop_ogolna~dane$plec, xlab = "Płeć", ylab = "Ocena samopoczucia",
+        main = "Ogólna ocena samopoczucia \n podzielona ze względu na płeć")
 ```
+
+Z wykresu `ramka-wąsy` można wyczytać, że wyniki u kobiet były o wiele bardziej zróżnicowane - "wąsy", wskazujące na najwyższy i najniższy wynik, niebędący obserwacją odstającą, są znacząco dłuższe, niż w przypadku wykresu dla mężczyzn. Również mediana na pierwszym wykresie jest niżej (poniżej zera). Możliwe jest również, że rozkład gęstości samopoczucia u kobiet charakteryzowałby się asymetrią.
+
+W przypadku mężczyzn, wykres wygląda dość symetrycznie. Można jednak zauważyć, że najniższy wynik niebędący obserwacją odstającą znajduje się dość daleko od pierwszego kwartyla (dolnej części "pudełka") oraz że tym razem istnieją obserwacje odstające (dolne obserwacje ekstremalne).
+
+Dla lepszego zilustrowania tej zależności posłużymy się wykresami gęstości rozkładu.
+
+```{r}
+plot(density(as.numeric(dane$ocena_samop_ogolna[dane$plec=="kobieta"])), 
+     main = "Rozkład oceny samopoczucia dla kobiet", ylab = "Gęstość", lwd = 2)
+curve(dnorm(x, mean(as.numeric(dane$ocena_samop_ogolna)[dane$plec=="kobieta"]), sd = sd(as.numeric(dane$ocena_samop_ogolna)[dane$plec=="kobieta"])),
+      add = T, col = 2, lwd = 2)
+plot(density(as.numeric(dane$ocena_samop_ogolna[dane$plec=="mężczyzna"])),
+     main = "Rozkład oceny samopoczucia dla mężczyzn", ylab = "Gęstość", lwd = 2)
+curve(dnorm(x, mean(as.numeric(dane$ocena_samop_ogolna)[dane$plec=="mężczyzna"]), sd = sd(as.numeric(dane$ocena_samop_ogolna)[dane$plec=="mężczyzna"])), 
+      add = T, col = 2, lwd =2)
+```
+
+
 
 ### Wyniki testów
 
