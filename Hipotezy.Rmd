@@ -625,8 +625,8 @@ r8 <- cor.test(x = as.numeric(dane$godziny_rozrywki_urzadzenia),
 ```{r}
 
 par(mfrow=c(1,2))
-boxplot(as.numeric(dane$godziny_rozrywki_urzadzenia), main = "Liczba godzin spędzonych na \nkomputerze w celach rozrywkowych",ylab = "poziomy")
-boxplot(as.numeric(dane$poczucie_uzaleznienia_urzadzenia), main = "Poczucie uzależnienia od urządzeń", ylab = "poziomy")
+boxplot(as.numeric(dane$godziny_rozrywki_urzadzenia), main = "Liczba godzin spędzonych na \nkomputerze dla rozrywki",ylab = "poziomy")
+boxplot(as.numeric(dane$poczucie_uzaleznienia_urzadzenia), main = "Poczucie uzależnienia \nod urządzeń", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
 
@@ -691,7 +691,7 @@ bar <- barplot(ttab,
         names.arg = c("mniej niż 1", "1-2", "2-3","3-4", "więcej niż 4"))
 legend("topright",
        inset=c(-0.2,0),
-       title = "Poczucie uzależnienia",
+       title = "Pocz. uzależ.",
        legend = c("nigdy", "b.rzadko", "rzadko", "czasami", "często", "b.często", "zawsze"),
        fill = colf(7),
        cex=0.75)
@@ -726,7 +726,7 @@ P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipot
 
 Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.3f",wsp_kor7)` oraz `r sprintf("%.3f",wsp_kor8)`. Wniosek: wraz ze wzrostem liczby godzin, spędzonych na korzystaniu dla rozrywki z urządzeń elektronicznych, wzrasta znacznie poczucie uzależnienia od tych urządzeń.
 
-### Bubble!
+### Bubble chart
 
 Poniżej przedstawiony jest wykres `bubble chart` badanej zależności, uwzględniający podział na wiek i płeć.
 
@@ -761,7 +761,7 @@ r10 <- cor.test(x = as.numeric(dane$wyzn_pory_snu),
 ```{r}
 
 par(mfrow=c(1,2))
-boxplot(as.numeric(dane$wyzn_pory_snu), main = "Posiadanie wyznaczonych pór snu",ylab = "poziomy")
+boxplot(as.numeric(dane$wyzn_pory_snu), main = "Posiadanie wyznaczonych \npór snu",ylab = "poziomy")
 boxplot(as.numeric(dane$jakosc_snu), main = "Jakość snu", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
@@ -865,7 +865,7 @@ r12 <- cor.test(x = as.numeric(dane$godziny_sportu),
 ```{r}
 
 par(mfrow=c(1,2))
-boxplot(as.numeric(dane$godziny_sportu), main = "Liczba godzin poświęcanych na sport",ylab = "poziomy")
+boxplot(as.numeric(dane$godziny_sportu), main = "Liczba godzin poświęcanych \nna sport",ylab = "poziomy")
 boxplot(as.numeric(dane$zalamanie), main = "Poczucie załamania", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
@@ -1241,8 +1241,7 @@ kable(tabelka) %>%
 
 
 ```{r hipoteza 10 boxplot}
-dane %>%
-  ggboxplot(x = "wiek_kat", y = "ocena_samop_ogolna", fill = "wiek_kat")
+boxplot(dane$ocena_samop_ogolna~dane$wiek_kat, main = "Ogólna ocena samopoczucia podzielona \n ze względu na kategoriie wiekowe", xlab = "Kategoria wiekowa", ylab = "Ogólna ocena samopoczucia")
 ```
 
 ```{r hipoteza 10 anova, results='asis'}
@@ -1480,16 +1479,17 @@ Możemy teraz wykonać predykcję Twojego samopoczucia - wystarczy że wypełnis
 
 Sprawdzimy, jak spisuje się model na naszych danych.
 
-Wykres rzeczywistej oceny samopoczucia oraz jej oceny na podstawie modelu, dla pierwszych 30 obserwacji (na czerwono rzeczywista wartość, na czarno odpowiedź modelu):
+Wykres rzeczywistej oceny samopoczucia oraz jej oceny na podstawie modelu, dla pierwszych 30 obserwacji (na czarno rzeczywista wartość, na czerwono odpowiedź modelu):
 
 ```{r wykres z modelu}
 t <- 1:nrow(dane_sum)
 
-plot(t[1:30], dane_sum$samopoczucie[1:30], col = 2, xlab = "numer obserwacji",  ylab = "ocena samopoczucia")
+plot(t[1:30], dane_sum$samopoczucie[1:30], xlab = "Numer obserwacji",  ylab = "Ocena samopoczucia")
 odp <- predict(mod, newdata = dane_sum[1:30,3:7], type = "response")
-points(t[1:30], odp[1:30])
+points(t[1:30], odp[1:30], col = 2)
 ```
 
+W poniżej tabeli na zielono zostały zaznaczone przypadki, w których wartość bezwzględna błędu wynosiła poniżej 10 (przy skali oceny samopoczucia od -124 do +62, oraz odchyleniu standardowym z próby około 28, uznaliśmy, że pomyłki poniżej 10 dają dostatecznie trafny wynik).
 ```{r tabela mod}
 tabela_mod <- cbind(t[1:30], dane_sum$samopoczucie[1:30], odp)
 tabela_mod <- as.data.frame(tabela_mod)
@@ -1644,6 +1644,25 @@ Z istotnych statystycznie korelacji mamy zatem:
 Blisko istotności znalazła się także korelacja międy snem a korzystaniem z urządzeń -0.112 z p-value 0.085.
 
 Poza tym istotne są wszystkie korelacje związane z samopoczuciem, co zostało wykazane wcześniej zarówno za pomocą testów Spearmana jak i Kendalla.
+
+To samo możemy przedstawić także jako kolorową macierz korelacji. 
+
+```{r}
+dane_pomoc <- cbind(dane_sum[,8], dane_sum[,7], dane_sum[,6], dane_sum[,5], dane_sum[,4], dane_sum[,3])
+colnames(dane_pomoc) <- c("Samopoczucie", "Kontakty", "Urządzenia", "Aktywność", "Dieta", "Sen")
+r <- cor(dane_pomoc, method = "spearman")
+p <- cor_pmat(dane_pomoc, method = "spearman")
+ggcorrplot(r, lab = T, p.mat = p)
+```
+
+Nieco inne wyniki co do wartości współczynników korelacji uzyskujemy, używając testu Kendalla. Jednakże nie zmienia się istotność korelacji.
+
+```{r}
+r <- cor(dane_pomoc, method = "kendall")
+p <- cor_pmat(dane_pomoc, method = "kendall")
+ggcorrplot(r, lab = T, p.mat = p)
+```
+
 
 ## Bubble chart
 
