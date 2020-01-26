@@ -903,10 +903,15 @@ Rozkład oceny samopoczucia u mężczyzn jest zbliżony do rozkładu normalnego;
 
 ```{r hipoteza 8 shapiro}
 shapiro <- shapiro.test(dane$ocena_samop_ogolna)$p.value
-
+s_pv_k <- shapiro.test(dane$ocena_samop_ogolna[dane$plec=="kobieta"])$p.value
+s_pv_m <- shapiro.test(dane$ocena_samop_ogolna[dane$plec=="mężczyzna"])$p.value
 ```
 
-P-value z testu Shapiro-Wilka dla cechy Ogólna ocena samopoczucia wynosi $p =$ `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.  Stosujemy test Manna - Whitney'a - Wilcoxona.
+P-value z testu Shapiro-Wilka dla cechy Ogólna ocena samopoczucia wynosi $p =$ `r sprintf("%.3f", shapiro)`, zatem ta cecha nie ma rozkładu normalnego.
+
+Zaskakujące jest natomiast, że w przypadku podziału tej zmiennej na płeć, okazuje się, że p-value testu Shapiro-Wilka dla kobiet wynosi $p =$ `r sprintf("%.3f", s_pv_k)`, natomiast dla mężczyzn $p =$ `r sprintf("%.3f", s_pv_m)`, co - pomimo wcześniejszych hipotez stawianych na podstawie wykresów - nie pozostawia wątpliwości. Rozkład samopoczucia u mężczyzn nie jest normalny, natomiast u kobiet nie ma podstaw do odrzucenia hipotezy o normalności.
+
+Stosujemy test Manna - Whitney'a - Wilcoxona.
 
 
 
