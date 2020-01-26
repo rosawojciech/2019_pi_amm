@@ -112,9 +112,9 @@ for( i in 2:ncol(dane)){
   shapiro <- c(shapiro, shapiro.test(as.numeric(dane[, i]))$p.value)
 }
 for (i in 1:length(shapiro)){
-  if(shapiro[i] <=0.05) {normalnosc[i] <- "NIE"} else if (shapiro[i]<=0.1) {
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "tak"} else if (shapiro[i]<=0.1) {
     normalnosc[i] <- "decyzja niejednoznaczna" }else 
-      normalnosc [i] <- "TAK"
+      normalnosc [i] <- "nie"
 }
 
 
@@ -171,14 +171,14 @@ Pytania dotyczące aktualnego nastroju były oceniane 5-cio stopniową skalą. W
 
 ```{r tabelka cała 2 kable, results='asis'}
 kable(tabela_cala2, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
 ```
 
 Przy ocenie częstości odczuwania poszczególnych emocji, do wyboru były odpowiedzi oceniane w skali 7-mio stopniowej. Oznaczały odpowiednio: "1 - nigdy", "2 - bardzo rzadko", "3 - rzadko", "4 - czasami", "5 - często", "6 - bardzo często", "7 - zawsze".
 
 ```{r tabelka cała 3 kable, results='asis'}
-kable(tabela_cala3, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+kable(tabela_cala3, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"), bootstrap_options = c("striped"))
 ```
 
 Pytania dotyczące snu oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
@@ -188,8 +188,8 @@ Pytania dotyczące snu oceniane były w skali 5-cio stopniowej. Wartości w pyta
 - oceny jakości snu określały: "1 - bardzo zła jakość" do "5 - bardzo dobra jakość".
 
 ```{r tabelka cała 4 kable, results='asis'}
-kable(tabela_cala4, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+kable(tabela_cala4, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
 ```
 
 Pytania dotyczące sportu oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
@@ -199,8 +199,8 @@ Pytania dotyczące sportu oceniane były w skali 5-cio stopniowej. Wartości w p
 - oceny własnej kondyncji fizycznej określały: "1 - bardzo zła" do "5 - bardzo dobra".
 
 ```{r tabelka cała 5 kable, results='asis'}
-kable(tabela_cala5, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+kable(tabela_cala5, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
 ```
 
 Pytania dotyczące korzystania z urządzeń elektronicznych oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
@@ -211,8 +211,8 @@ Pytania dotyczące korzystania z urządzeń elektronicznych oceniane były w ska
 - częstości występowania poczucia uzależnienia od u.e. oznaczały: "1 - nigdy", "2 - rzadko", "3 - czasami", "4 - często", "5 - bardzo często".
 
 ```{r tabelka cała 6 kable, results='asis'}
-kable(tabela_cala6, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+kable(tabela_cala6, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum","Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"), bootstrap_options = c("striped"))
 ```
 
 Pytania dotyczące diety oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
@@ -222,8 +222,8 @@ Pytania dotyczące diety oceniane były w skali 5-cio stopniowej. Wartości w py
 - regularności spożywanych posiłków oznaczały: "1 - jem nieregularnie", "2 - różnie z tym bywa", "3 - staram się jeść regularnie", "4 - zazwyczaj jem regularnie", "5 - mam stałe pory posiłków".
 
 ```{r tabelka cała 7 kable, results='asis'}
-kable(tabela_cala7, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+kable(tabela_cala7, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
 ```
 
 Pytania dotyczące kontaktów towarzyskich oceniane były w skali 5-cio stopniowej. Wartości w pytaniu dotyczącym:
@@ -233,8 +233,8 @@ Pytania dotyczące kontaktów towarzyskich oceniane były w skali 5-cio stopniow
 - znaczenia, jakie mają dla ankietowanego kontakty z innymi ludźmi oznaczały "1 - brak znaczenia" do "5 - bardzo duże znaczenie".
 
 ```{r tabelka cała 8 kable, results='asis'}
-kable(tabela_cala8, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład jest normalny?")) %>%
-   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"))
+kable(tabela_cala8, booktabs = T, col.names = c("Cecha", "Minimum", "Mediana","Średnia", "Odchylenie standardowe", "Maksimum", "Czy rozkład różni się istotnie od rozkładu normalnego?")) %>%
+   kable_styling(full_width = TRUE, latex_options = c("striped", "scale_down"),bootstrap_options = c("striped"))
 ```
 
 Ogólna ocena samopoczucia została uzyskana poprzez zsumowanie wartości uczuć pozytywnych ze znakiem dodatnim oraz negatywnych z ujemnym. 
@@ -1047,6 +1047,7 @@ mindane <- NULL
 maxdane <- NULL
 mediadane <- NULL
 srdane <- NULL
+sddane <- NULL
 normalnosc <- rep(0, ncol(dane_sum)-1)
 shapiro <- NULL
 #zaczynamy od drugiej kolumny bo pierwsza to płeć
@@ -1055,22 +1056,23 @@ for( i in 2:ncol(dane_sum)){
   maxdane <- c(maxdane,max(as.numeric(dane_sum[, i])))
   mediadane <- c(mediadane,median(as.numeric(dane_sum[, i])))
   srdane <- c(srdane, round(mean(as.numeric(dane_sum[,i])),2))
+  sddane <- c(sddane, round(sd(as.numeric(dane_sum[,i])),2))
   shapiro <- c(shapiro, shapiro.test(as.numeric(dane_sum[, i]))$p.value)
 }
 for (i in 1:length(shapiro)){
-  if(shapiro[i] <=0.05) {normalnosc[i] <- "NIE"} else if (shapiro[i]<=0.1) {
+  if(shapiro[i] <=0.05) {normalnosc[i] <- "tak"} else if (shapiro[i]<=0.1) {
     normalnosc[i] <- "decyzja niejednoznaczna" }else 
-      normalnosc [i] <- "TAK"
+      normalnosc [i] <- "nie"
 }
 labelki <- c("Wiek", "Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty", "Samopoczucie")
-tabela_cala <- cbind( labelki, mindane, mediadane,srdane, maxdane, normalnosc)
+tabela_cala <- cbind( labelki, mindane, mediadane,srdane,sddane, maxdane, normalnosc)
 tabela_cala <- as.data.frame(tabela_cala)
-colnames(tabela_cala) <- c("Cecha", "Min", "Mediana", "Średnia", "Max", "Czy rozkład jest normalny?")
+colnames(tabela_cala) <- c("Cecha", "Min", "Mediana", "Średnia","Odchylenie standardowe", "Max", "Czy rozkład różni się istotnie od rozkładu normalnego?")
 ```
 
 ```{r sumowanie danych kable, results = 'asis'}
 kable(tabela_cala)%>%
-  kable_styling(full_width = T, latex_options = c("scale_down"))
+  kable_styling(full_width = T, latex_options = c("scale_down", "striped"), bootstrap_options = c("striped"))
 ```
 
 
@@ -1276,6 +1278,130 @@ bubble
 ```
 
 
+## Korelacje (wg testu Spearmana)
+
+```{r}
+sendietapv <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$dieta),
+         method = "spearman")$p.value
+senaktpv <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$aktywnosc),
+         method = "spearman")$p.value
+senurzpv <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$p.value
+senkontpv <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$sen),
+         method = "spearman")$p.value
+sensamoppv <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+dietaaktpv <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$aktywnosc),
+         method = "spearman")$p.value
+dietaurzpv <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$p.value
+dietakontpv <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$kontakty),
+         method = "spearman")$p.value
+dietasamoppv <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+akturzpv <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$p.value
+aktkontpv <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$aktywnosc),
+         method = "spearman")$p.value
+aktsamoppv <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+urzkontpv <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$p.value
+urzsamoppv <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+kontsamoppv <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$p.value
+wiersz1 <- rbind(c(0, sendietapv, senaktpv, senurzpv, senkontpv, sensamoppv))
+                    wiersz2 <- rbind(c(sendietapv, 0, dietaaktpv, dietaurzpv, dietakontpv, dietasamoppv))
+                    wiersz3 <- rbind(c(senaktpv, dietaaktpv, 0, akturzpv, aktkontpv, aktsamoppv))
+                    wiersz4 <- rbind(c(senurzpv, dietaurzpv, akturzpv, 0, urzkontpv, urzsamoppv))
+                    wiersz5 <- rbind(c(senkontpv, dietakontpv, aktkontpv, urzkontpv, 0, kontsamoppv))
+                    wiersz6 <- rbind(c(sensamoppv, dietasamoppv, aktsamoppv, urzsamoppv, kontsamoppv, 0))
+macierzpv <- rbind(wiersz1, wiersz2, wiersz3, wiersz4, wiersz5, wiersz6)
+
+
+```
+
+```{r}
+sendietakor <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$dieta),
+         method = "spearman")$estimate
+senaktkor <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$aktywnosc),
+         method = "spearman")$estimate
+senurzkor <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$estimate
+senkontkor <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$sen),
+         method = "spearman")$estimate
+sensamopkor <- cor.test(x = as.numeric(dane_sum$sen), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+dietaaktkor <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$aktywnosc),
+         method = "spearman")$estimate
+dietaurzkor <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$estimate
+dietakontkor <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$kontakty),
+         method = "spearman")$estimate
+dietasamopkor <- cor.test(x = as.numeric(dane_sum$dieta), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+akturzkor <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$estimate
+aktkontkor <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$aktywnosc),
+         method = "spearman")$estimate
+aktsamopkor <- cor.test(x = as.numeric(dane_sum$aktywnosc), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+urzkontkor <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$urzadzenia),
+         method = "spearman")$estimate
+urzsamopkor <- cor.test(x = as.numeric(dane_sum$urzadzenia), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+kontsamopkor <- cor.test(x = as.numeric(dane_sum$kontakty), y = as.numeric(dane_sum$samopoczucie),
+         method = "spearman")$estimate
+wiersz1 <- rbind(c(1, sendietakor, senaktkor, senurzkor, senkontkor, sensamopkor))
+                    wiersz2 <- rbind(c(sendietakor, 1, dietaaktkor, dietaurzkor, dietakontkor, dietasamopkor))
+                    wiersz3 <- rbind(c(senaktkor, dietaaktkor, 1, akturzkor, aktkontkor, aktsamopkor))
+                    wiersz4 <- rbind(c(senurzkor, dietaurzkor, akturzkor, 1, urzkontkor, urzsamopkor))
+                    wiersz5 <- rbind(c(senkontkor, dietakontkor, aktkontkor, urzkontkor, 1, kontsamopkor))
+                    wiersz6 <- rbind(c(sensamopkor, dietasamopkor, aktsamopkor, urzsamopkor, kontsamopkor, 1))
+                    macierzkor <- rbind(wiersz1, wiersz2, wiersz3, wiersz4, wiersz5, wiersz6)
+macierzkor <- round(macierzkor,3) 
+macierzpv <- round(macierzpv, 3)
+wiersz1 <- c("1", "0.324 (<0.001)", "-0.016 (0.809)", "-0.112 (0.085)", "0.19 (0.003)", "0.261 (<0.001)")
+wiersz2 <- c("0.324 (<0.001)", "1", "0.151 (0.019)", "-0.131 (0.042)", "0.171 (0.008)", "0.322 (<0.001)" )
+wiersz3 <- c("-0.016 (0.809)", "0.151 (0.019)", "1", "-0.156 (0.015)", "0.033 (0.611)", "0.162 (0.011)")
+wiersz4 <- c("-0.112 (0.085)", "-0.131 (0.042)", "-0.156 (0.015)", "1", "0.083 (0.2)", "-0.162 (0.012)")
+wiersz5 <- c("0.19 (0.003)", "0.171 (0.008)", "0.033 (0.611)", "0.083 (0.2)", "1", "0.455 (<0.001)")
+wiersz6 <- c("0.261 (<0.001)", "0.322 (<0.001)", "0.163 (0.011)", "-0.162 (0.012)", "0.455 (<0.001)", "1")
+```
+
+```{r}
+korelacje <- rbind(wiersz1, wiersz2, wiersz3, wiersz4, wiersz5, wiersz6)
+rownames(korelacje) <- c("Sen", "Dieta", "Aktywność", "Urządzenia", "Kontakty", "Samopoczucie")
+colnames(korelacje) <- rownames(korelacje)
+```
+
+Poniżej przedstawiamy tabelę z korelacjami poszczególnych badanych przez nas cech. Korelacje zosaty wyliczone z testu Spearmana, w nawiasach jest podane p-value dla każdego współczynnika korelacji.
+
+```{r results='asis'}
+#cell_spec(korelacje[1][1],"latex", color = "red")
+kable(korelacje) %>%
+  kable_styling(full_width = T)
+
+```
+
+Z istotnych statystycznie korelacji mamy zatem:
+
+- sen i dieta 0.324
+
+- sen i kontakty towarzyskie 0.19
+
+- dieta i kontakty towarzyskie 0.171
+
+- dieta i korzystanie z urządzeń -0.131
+
+- dieta i aktywność fizyczna 0.151
+
+- aktywność fizyczna i korzystanie z urządzeń -0.156
+
+Blisko istotności znalazła się także korelacja międy snem a korzystaniem z urządzeń -0.112 z p-value 0.085.
+
+Poza tym istotne są wszystkie korelacje związane z samopoczuciem, co zostało wykazane wcześniej zarówno za pomocą testów Spearmana jak i Kendalla.
 
 # Wnioski
 
