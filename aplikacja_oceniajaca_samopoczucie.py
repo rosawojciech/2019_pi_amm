@@ -99,7 +99,7 @@ def start(ramka_startu):
         #skala.pack(fill = "both", expand = "yes")
 #%%
 def pokaz_info():
-    tk.messagebox.showwarning(title="Informacje", message = "Skala oceny od -137 do +81, na podstawie naszych badań przeprowadzonych na grupie 240 osób średnia to -2.61, minimum to -79, maksimum to 55. Dane do badania samopoczucia były zbierane na podstawie ankiety, pytania dotyczace samopoczucia pochodziły z artykułu “Skale do Pomiaru Nastroju i Sześciu Emocji” autorstwa Bogdana Wojciszke i Wiesława Baryły. Autorami badania, na podstawie którego stworzono tą aplikację, są Marcin Dziadosz, Alicja Hołowiecka i Matylda Jankowska.")
+    tk.messagebox.showwarning(title="Informacje", message = "Skala oceny od -124 do +60, na podstawie naszych badań przeprowadzonych na grupie 240 osób średnia to -2.61, minimum to -79, maksimum to 55. Dane do badania samopoczucia były zbierane na podstawie ankiety, pytania dotyczace samopoczucia pochodziły z artykułu “Skale do Pomiaru Nastroju i Sześciu Emocji” autorstwa Bogdana Wojciszke i Wiesława Baryły. Autorami badania, na podstawie którego stworzono tą aplikację, są Marcin Dziadosz, Alicja Hołowiecka i Matylda Jankowska.")
 #%%
 def wybieram(odp, ramka_pytania):
     if(odp.get() == "None"):
@@ -180,19 +180,19 @@ def oblicz_samopoczucie():
     
     opis=""
     zdjecie=""
-    if(samopoczucie<=-30):
+    if(samopoczucie<=-40):
         opis = "złe"
         zdjecie = "zle.png"
         bg='red'
-    elif(samopoczucie>-30 and samopoczucie<=-10):
+    elif(samopoczucie>-40 and samopoczucie<=-20):
         opis = "kiepskie"
         zdjecie = "kiepskie.png"
         bg='orange'
-    elif(samopoczucie>-10 and samopoczucie<3):
+    elif(samopoczucie>-20 and samopoczucie<3):
         opis = "przeciętne"
         zdjecie = "przecietne.png"
         bg='yellow'
-    elif(samopoczucie>=3 and samopoczucie<15):
+    elif(samopoczucie>=3 and samopoczucie<20):
         opis = "dobre"
         zdjecie = "dobre.png"
         bg = 'pale green'
