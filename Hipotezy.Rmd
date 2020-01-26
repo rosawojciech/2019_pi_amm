@@ -897,7 +897,7 @@ curve(dnorm(x, mean(as.numeric(dane$ocena_samop_ogolna)[dane$plec=="mężczyzna"
       add = T, col = 2, lwd =2)
 ```
 
-
+Rozkład oceny samopoczucia u mężczyzn jest zbliżony do rozkładu normalnego; u kobiet można pokusić się o stwierdzenie dwumodalności rozkładu, a na pewno stwierdzic jego asymetryczność.
 
 ### Wyniki testów
 
