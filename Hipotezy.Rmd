@@ -598,9 +598,26 @@ kable(pvals)%>%
 
 ```
 
-P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych a poczuciem uzależnienia od nich.
+P-value dla obu testów są nieistotnie różne od zera. Należy odrzucić hipotezę $H_0$, na rzecz hipotezy alternatywnej $H_1$. Istnieje zależność pomiędzy liczbą godzin spędzonych na używaniu urządzeń elektronicznych w celach rozrywkowych a poczuciem uzależnienia od nich.
 
 Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.3f",wsp_kor7)` oraz `r sprintf("%.3f",wsp_kor8)`. Wniosek: wraz ze wzrostem liczby godzin, spędzonych na korzystaniu dla rozrywki z urządzeń elektronicznych, wzrasta znacznie poczucie uzależnienia od tych urządzeń.
+
+### Bubble!
+
+Poniżej przedstawiony jest wykres `bubble chart` badanej zależności, uwzględniający podział na wiek i płeć.
+
+```{r}
+bombelki4 <- dane %>% 
+  ggplot(aes(x =godziny_rozrywki_urzadzenia, y = poczucie_uzaleznienia_urzadzenia, size = wiek, color = plec))+
+  geom_point()
+bombelki4
+```
+
+Poczucie uzależnienia od urządzeń u mężczyzn wzrasta wraz ze wzrostem liczby godzin, które poświęca się na korzystanie z nich dla rozrywki. 
+
+Kobiety, niezależnie od liczby godzin, zdają się mieć to poczucie częściej.
+
+Istnieją również przypadki osób, które nie czują się uzależnione, pomimo bardzo dużej liczby godzin, które spędzają na urządzeniach elektronicznych.
 
 ## Hipoteza V
 
