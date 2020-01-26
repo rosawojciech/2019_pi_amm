@@ -507,6 +507,21 @@ P-value dla obu testów wynosi około $p =$ `r sprintf("%.3f", r5)`. Należy odr
 
 Współczynniki korelacji dla testów `rho-Spearmana` i `tau-Kendalla` wynoszą odpowiednio `r sprintf("%.3f",wsp_kor5)` oraz `r sprintf("%.3f",wsp_kor6)`. Interpretując te współczynniki oraz dane z wykresów, można stwierdzić, że wraz ze wzrostem liczby osób, z którymi utrzymuje się regularny kontakt, spada częstość odczuwania niepokoju.
 
+### Bubble!
+
+Ponieważ z testów wynika, że istnieje zależnośc pomiędzy tymi dwoma czynnikami, można również zobrazować ją wykresem `bubble chart`, uwzględniając podział na wiek i płeć.
+
+```{r}
+bombelki3 <- dane %>% 
+  ggplot(aes(x =liczba_osob_kontakty, y = niepokoj, size = wiek, color = plec))+
+  geom_point()
+bombelki3
+```
+
+Z powyższego wykresu można wysnuć wniosek, że u mężczyzn brak posiadania stałych kontaktów z innymi ludźmi znacząco wpływa na częstość odczuwania niepokoju; gdy liczba kontaktów wzrasta, ta częstotliwość spada. Również wiek ma tutaj spore znaczenie.
+
+U kobiet - szczególnie młodszych, niezależnie od liczby bliskich znajomych, odczuwanie niepokoju jest częstszym zjawiskiem (dlatego SWOJĄ kobietę trzeba dużo tulić).
+
 ## Hipoteza IV
 
 Badanie, czy istnieje zależność pomiędzy liczbą godzin przeznaczonych na korzystanie z urządzeń elektronicznych a poczuciem uzależnienia od urządzeń.
