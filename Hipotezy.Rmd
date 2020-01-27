@@ -978,7 +978,7 @@ r14 <- cor.test(x = as.numeric(dane$jakosc_posilkow),
 ```{r}
 
 par(mfrow=c(1,2))
-boxplot(as.numeric(dane$jakosc_posilkow), main = "Jakość posiłkóW",ylab = "poziomy")
+boxplot(as.numeric(dane$jakosc_posilkow), main = "Jakość posiłków",ylab = "poziomy")
 boxplot(as.numeric(dane$dobry_humor), main = "Dobry humor", ylab = "poziomy")
 par(mfrow=c(1,1))
 ```
